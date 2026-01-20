@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CXO MEET - Full Dashboard</title>
+
+  <style>
+    *{ box-sizing:border-box; font-family: Arial, sans-serif; }
+    body{
+      margin:0;
+      background:#f4f6f9;
+      padding:18px;
+      color:#111;
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-bottom:14px;
+    }
+
+    .title-area h1{
+      margin:0;
+      font-size:22px;
+    }
+
+    .title-area p{
+      margin:6px 0 0;
+      color:#444;
+      font-size:13px;
+    }
+
+    .filters{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    select, input{
+      padding:10px 12px;
+      border:1px solid #ddd;
+      border-radius:12px;
+      outline:none;
+      background:#fff;
+      min-width:180px;
+    }
+
+    button{
+      padding:10px 14px;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      background:#111;
+      color:#fff;
+      font-weight:600;
+    }
+    button:hover{ opacity:0.9; }
+
+    .btn-light{
+      background:#fff;
+      color:#111;
+      border:1px solid #ddd;
+    }
+
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:12px;
+      margin: 12px 0 16px;
+    }
+
+    .kpi-card{
+      background:#fff;
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 6px 16px rgba(0,0,0,0.06);
+    }
+
+    .kpi-card .label{
+      font-size:12px;
+      color:#666;
+      margin-bottom:8px;
+    }
+
+    .kpi-card .value{
+      font-size:26px;
+      font-weight:800;
+      margin:0;
+    }
+
+    .kpi-card .sub{
+      font-size:12px;
+      color:#555;
+      margin-top:6px;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    @media(max-width: 900px){
+      .layout{ grid-template-columns: 1fr; }
+    }
+
+    .panel{
+      background:#fff;
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 6px 16px rgba(0,0,0,0.06);
+      overflow:auto;
+    }
+
+    .panel h2{
+      margin:0 0 10px;
+      font-size:16px;
+    }
+
+    .chart-wrap{
+      width:100%;
+      overflow:auto;
+    }
+
+    canvas{
+      width:100%;
+      max-height:320px;
+    }
+
+    .table-wrap{
+      margin-top:12px;
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 6px 16px rgba(0,0,0,0.06);
+      overflow:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:950px;
+    }
+
+    thead th{
+      background:#f0f0f0;
+      font-weight:700;
+      font-size:14px;
+      text-align:left;
+      padding:12px;
+      border-bottom:2px solid #ddd;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+
+    tbody td{
+      padding:10px 12px;
+      border-bottom:1px solid #eee;
+      font-size:14px;
+      vertical-align:middle;
+    }
+
+    tbody tr:hover{ background:#fafafa; }
+
+	td:nth-child(2){
+  width:70px;
+  text-align:center;
+}
+   .avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  object-fit:cover;
+  display:block;
+  margin:0 auto;
+  border:1px solid #ddd;
+}
+
+    .highlight{
+      background:#fff59d;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      background:#eef2ff;
+      font-size:12px;
+      font-weight:700;
+      color:#2c3e50;
+    }
+
+    .footer{
+      margin-top:12px;
+      font-size:12px;
+      color:#666;
+    }
+
+    /* Print */
+    @media print{
+      body{ background:#fff; padding:0; }
+      .filters, .footer, .btns { display:none !important; }
+      .panel, .kpi-card, .table-wrap { box-shadow:none; border-radius:0; }
+      thead th{ position:static; }
+    }
+
+    .btns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="title-area">
+      <h1>CXO MEET - Full Alumni Dashboard</h1>
+      <p id="countText">Showing 0 records</p>
+      <div class="btns">
+        <button class="btn-light" id="exportBtn">Export CSV</button>
+        <button class="btn-light" id="printBtn">Print</button>
+      </div>
+    </div>
+
+    <div class="filters">
+      <input id="searchInput" type="text" placeholder="Search Alumni Name..." />
+      <select id="batchFilter">
+        <option value="all">All Batches</option>
+      </select>
+      <select id="companyFilter">
+        <option value="all">All Companies</option>
+      </select>
+      <button id="resetBtn">Reset</button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpis">
+    <div class="kpi-card">
+      <div class="label">Total Alumni</div>
+      <p class="value" id="kpiTotal">0</p>
+      <div class="sub">Records in dashboard</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="label">Unique Batches</div>
+      <p class="value" id="kpiBatches">0</p>
+      <div class="sub">Batch year ranges</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="label">Unique Companies</div>
+      <p class="value" id="kpiCompanies">0</p>
+      <div class="sub">Company count</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="label">Highlighted Alumni</div>
+      <p class="value" id="kpiHighlighted">0</p>
+      <div class="sub">Marked as priority (yellow)</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="layout">
+    <div class="panel">
+      <h2>Batch-wise Alumni Count</h2>
+      <div class="chart-wrap">
+        <canvas id="batchChart" height="300"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Top Companies (Count)</h2>
+      <div class="chart-wrap">
+        <canvas id="companyChart" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Serial No</th>
+          <th>Photo</th>
+          <th>Alumni Name</th>
+          <th>Batch</th>
+          <th>Company Name</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    Data structure based on your CXO MEET PDF table format. :contentReference[oaicite:1]{index=1}
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"> </script>
+
+<script>
+  // ✅ Data (based on your CXO Meet PDF list)
+  const alumniData = [
+    { sno: 1,  name: "Bharat Parekh", batch: "1991-1993", company: "CLSA", status: "Confirmed", highlight: true,  photo: "Bharat Parekh CLSA.jpg" },
+    { sno: 2,  name: "Ashok Suvarna", batch: "1995-1998", company: "Aditya Birla Money", status: "Confirmed", highlight: false, photo: "Ashok Suvarna Aditya Birla Money.jpg" },
+    { sno: 3,  name: "Rahul Chiddarwar", batch: "1996-1998", company: "Unimoni", status: "Confirmed", highlight: true,  photo: "Rahul Chiddarwar Unimoni.jpg" },
+    { sno: 4,  name: "Prashant Nair", batch: "1996-1998", company: "Ambit Capital", status: "Confirmed", highlight: false, photo: "Prashant Nair Ambit Capital.jpg" },
+    { sno: 5,  name: "Reet Bhambania", batch: "2001-2003", company: "EMA Partners", status: "Confirmed", highlight: false, photo: "Reet Bhambania EMA Partners.jpg" },
+    { sno: 6,  name: "Anoop Sharma", batch: "2005-2007", company: "KPMG", status: "Confirmed", highlight: false, photo: "Anoop Sharma KPMG.jpg" },
+    { sno: 7,  name: "Hardik Sheth", batch: "2004-2006", company: "Tech Mahindra", status: "Confirmed", highlight: false, photo: "Hardik Sheth Tech Mahindra.jpg" },
+    { sno: 8,  name: "Sujeesh Sukumaran", batch: "1993-1995", company: "Pepper Wellness Private Ltd", status: "Confirmed", highlight: false, photo: "Sujeesh Sukumaran Pepper Wellness Private Ltd.jpg" },
+    { sno: 9,  name: "Vijay Haswani", batch: "2002-2004", company: "Navadhan", status: "Confirmed", highlight: false, photo: "Vijay Haswani Navadhan.jpg" },
+    { sno: 10, name: "Latika S Kundu", batch: "1994-1996", company: "Metropolitan Stock Exchange", status: "Confirmed", highlight: false, photo: "Latika S Kundu Metropolitan Stock Exchange.jpg" },
+    { sno: 11, name: "Amitabh Dalal", batch: "2004-2006", company: "UTI", status: "Confirmed", highlight: false, photo: "Amitabh Dalal UTI.jpg" },
+    { sno: 12, name: "Dipesh Gajera", batch: "2004-2006", company: "Yes Bank", status: "Confirmed", highlight: true,  photo: "Dipesh Gajera Yes Bank.jpg" },
+    { sno: 13, name: "Triven Chopra", batch: "2004-2006", company: "NatWest", status: "Confirmed", highlight: false, photo: "Triven Chopra NatWest.jpg" },
+    { sno: 14, name: "Manav Verma", batch: "2000-2002", company: "IIFL", status: "Confirmed", highlight: false, photo: "Manav Verma IIFL.jpg" },
+    { sno: 15, name: "Mukesh Kanodia", batch: "2009-2011", company: "Piramal", status: "Confirmed", highlight: false, photo: "Mukesh Kanodia Piramal.jpg" },
+    { sno: 16, name: "Tarandeep Singh Sekhon", batch: "2005-2007", company: "KidZania India", status: "Confirmed", highlight: true,  photo: "Tarandeep Singh Sekhon KidZania India.jpg" },
+    { sno: 17, name: "Sourya Mohanty", batch: "", company: "DocuBay", status: "Confirmed", highlight: true,  photo: "Sourya Mohanty DocuBay.jpg" },
+    { sno: 18, name: "Shekhar Ashani", batch: "2010-2012", company: "Jefferies", status: "Confirmed", highlight: false, photo: "Shekhar Ashani Jefferies.jpg" },
+    { sno: 19, name: "Liza Singh", batch: "2010-2012", company: "Kotak Mahindra", status: "Confirmed", highlight: false, photo: "Liza Singh Kotak Mahindra.jpg" },
+    { sno: 20, name: "Nidhi Verma", batch: "2003-2005", company: "Emkay", status: "Confirmed", highlight: false, photo: "Nidhi Verma Emkay.jpg" },
+    { sno: 21, name: "Apram Apar", batch: "2002-2004", company: "Ocean Network Express", status: "Confirmed", highlight: false, photo: "Apram Apar Ocean Network Express.jpg" },
+    { sno: 22, name: "Ankesh Kumar", batch: "2002-2004", company: "Ingram Micro", status: "Confirmed", highlight: false, photo: "Ankesh Kumar Ingram Micro.jpg" },
+    { sno: 23, name: "Virendra Chaudhary", batch: "2010-2012", company: "Algor Supply Chain", status: "Confirmed", highlight: false, photo: "Virendra Chaudhary Algor Supply Chain.jpg" },
+    { sno: 24, name: "Romita B", batch: "2008-2010", company: "GEP Worldwide", status: "Confirmed", highlight: true,  photo: "Romita B GEP Worldwide.jpg" },
+    { sno: 25, name: "Gopinadhan K", batch: "2009-2011", company: "EMA Partners", status: "Confirmed", highlight: true,  photo: "Gopinadhan K EMA Partners.jpg" },
+    { sno: 26, name: "Jignesh Dadwa", batch: "2005-2007", company: "Syntramina LLP", status: "Confirmed", highlight: true,  photo: "Jignesh Dadwa Syntramina LLP.jpg" },
+    { sno: 27, name: "Anup Bauskar", batch: "2015-2017", company: "Turtlemint", status: "Confirmed", highlight: false, photo: "Anup Bauskar Turtlemint.jpg" },
+    { sno: 28, name: "Ankur Pagariya", batch: "2009-2011", company: "IndusInd Bank", status: "Confirmed", highlight: false, photo: "Ankur Pagariya IndusInd Bank.jpg" },
+    { sno: 29, name: "Mihir Ashar", batch: "1993-1995", company: "Govindji Haridas", status: "Confirmed", highlight: false, photo: "Mihir Ashar Govindji Haridas.jpg" },
+    { sno: 30, name: "Dhananjay Singh Kushwa", batch: "2012-2014", company: "Founder", status: "Confirmed", highlight: true,  photo: "Dhananjay Singh Kushwa Founder.jpg" },
+    { sno: 31, name: "Vikram Lalvani", batch: "1995-1997", company: "Sterling Holiday Resorts", status: "Confirmed", highlight: false, photo: "Vikram Lalvani Sterling Holiday Resorts.jpg" },
+    { sno: 32, name: "Santosh Raval", batch: "2012-2014", company: "Axis Bank", status: "Confirmed", highlight: false, photo: "Santosh Raval Axis Bank.jpg" },
+    { sno: 33, name: "Gunjan Malviya", batch: "2007-2009", company: "Experian", status: "Confirmed", highlight: false, photo: "Gunjan Malviya Experian.jpg" },
+    { sno: 34, name: "Rahul Rathi", batch: "2007-2009", company: "FundsIndia Private Wealth", status: "Confirmed", highlight: false, photo: "Rahul Rathi FundsIndia Private Wealth.jpg" },
+    { sno: 35, name: "Rahul Prasad", batch: "2004-2006", company: "USV Private Ltd", status: "Confirmed", highlight: false, photo: "Rahul Prasad USV Private Ltd.jpg" },
+    { sno: 36, name: "Sushma Chopra", batch: "1998-2000", company: "Mondelez International", status: "Confirmed", highlight: false, photo: "Sushma Chopra Mondelez International.jpg" },
+    { sno: 37, name: "Minal Jain", batch: "2008-2010", company: "Leadership Tillit", status: "Confirmed", highlight: false, photo: "Minal Jain Leadership Tillit.jpg" },
+    { sno: 38, name: "Roshan Damodaran", batch: "", company: "Medusind", status: "Confirmed", highlight: false, photo: "Roshan Damodaran Medusind.jpg" },
+    { sno: 39, name: "Esha Krishnan", batch: "", company: "Mercedes Benz Research &", status: "Confirmed", highlight: false, photo: "Esha Krishnan Mercedes Benz Research &.jpg" },
+    { sno: 40, name: "Barun V Mohanty", batch: "2007-2009", company: "Greenply Industries Limited", status: "Confirmed", highlight: false, photo: "Barun V Mohanty Greenply Industries Limited.jpg" },
+    { sno: 41, name: "Shalini Singh", batch: "", company: "Hitachi Digital Services", status: "Confirmed", highlight: false, photo: "Shalini Singh Hitachi Digital Services.jpg" },
+    { sno: 42, name: "Ispita Ansunala", batch: "2000-2004", company: "SAP", status: "Confirmed", highlight: false, photo: "Ispita Ansunala SAP.jpg" },
+    { sno: 43, name: "Vishal Vyas", batch: "2009-2011", company: "DP WORLD", status: "Confirmed", highlight: false, photo: "Vishal Vyas DP WORLD.jpg" },
+    { sno: 44, name: "Sidharth Pratap", batch: "2004-2005", company: "Cognizant Technology Solutions", status: "Confirmed", highlight: false, photo: "Sidharth Pratap Cognizant Technology Solutions.jpg" },
+    { sno: 45, name: "Raghuveer Singh", batch: "2007-2009", company: "Zee5", status: "Confirmed", highlight: false, photo: "Raghuveer Singh Zee5.jpg" }
+  ];
+
+
+
+  const tableBody = document.getElementById("tableBody");
+  const batchFilter = document.getElementById("batchFilter");
+  const companyFilter = document.getElementById("companyFilter");
+  const searchInput = document.getElementById("searchInput");
+  const resetBtn = document.getElementById("resetBtn");
+  const countText = document.getElementById("countText");
+
+  const kpiTotal = document.getElementById("kpiTotal");
+  const kpiBatches = document.getElementById("kpiBatches");
+  const kpiCompanies = document.getElementById("kpiCompanies");
+  const kpiHighlighted = document.getElementById("kpiHighlighted");
+
+  const exportBtn = document.getElementById("exportBtn");
+  const printBtn = document.getElementById("printBtn");
+
+  let batchChartInstance = null;
+  let companyChartInstance = null;
+
+  function unique(arr){ return [...new Set(arr)]; }
+
+  function populateFilters() {
+    const batches = unique(alumniData.map(a => a.batch).filter(b => b && b.trim() !== "")).sort();
+    const companies = unique(alumniData.map(a => a.company)).sort();
+
+    batches.forEach(b => {
+      const opt = document.createElement("option");
+      opt.value = b;
+      opt.textContent = b;
+      batchFilter.appendChild(opt);
+    });
+
+    companies.forEach(c => {
+      const opt = document.createElement("option");
+      opt.value = c;
+      opt.textContent = c;
+      companyFilter.appendChild(opt);
+    });
+  }
+
+  function renderTable(data) {
+    tableBody.innerHTML = "";
+
+    data.forEach(a => {
+      const tr = document.createElement("tr");
+      if (a.highlight) tr.classList.add("highlight");
+
+      tr.innerHTML = `
+        <td>${a.sno}</td>
+        <td>
+  	<img 
+    	class="avatar"
+    	src="${a.photo}"
+    	alt="${a.name}"
+    	onerror="this.onerror=null; this.src='default.jpg';"
+ 	 />
+	</td>
+
+        <td><b>${a.name}</b></td>
+        <td>${a.batch ? a.batch : "-"}</td>
+        <td>${a.company}</td>
+        <td><span class="badge">${a.status}</span></td>
+      `;
+
+      tableBody.appendChild(tr);
+    });
+
+    countText.textContent = `Showing ${data.length} records`;
+  }
+
+  function updateKPIs(data){
+    kpiTotal.textContent = data.length;
+
+    const batches = unique(data.map(a => a.batch).filter(b => b && b.trim() !== ""));
+    const companies = unique(data.map(a => a.company));
+
+    kpiBatches.textContent = batches.length;
+    kpiCompanies.textContent = companies.length;
+
+    const highlightedCount = data.filter(a => a.highlight).length;
+    kpiHighlighted.textContent = highlightedCount;
+  }
+
+  function groupCount(data, key){
+    const map = {};
+    data.forEach(item => {
+      const k = (item[key] && item[key].trim() !== "") ? item[key] : "Unknown";
+      map[k] = (map[k] || 0) + 1;
+    });
+    return map;
+  }
+
+  function buildCharts(data){
+    // Batch chart
+    const batchMap = groupCount(data, "batch");
+    const batchLabels = Object.keys(batchMap);
+    const batchValues = Object.values(batchMap);
+
+    const batchCtx = document.getElementById("batchChart");
+
+    if(batchChartInstance) batchChartInstance.destroy();
+    batchChartInstance = new Chart(batchCtx, {
+      type: "bar",
+      data: {
+        labels: batchLabels,
+        datasets: [{
+          label: "Alumni Count",
+          data: batchValues
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // Company chart (Top 10)
+    const companyMap = groupCount(data, "company");
+    const sortedCompanies = Object.entries(companyMap).sort((a,b)=> b[1]-a[1]);
+    const top = sortedCompanies.slice(0, 10);
+
+    const companyLabels = top.map(x => x[0]);
+    const companyValues = top.map(x => x[1]);
+
+    const companyCtx = document.getElementById("companyChart");
+
+    if(companyChartInstance) companyChartInstance.destroy();
+    companyChartInstance = new Chart(companyCtx, {
+      type: "bar",
+      data: {
+        labels: companyLabels,
+        datasets: [{
+          label: "Count",
+          data: companyValues
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+
+  function applyFilters() {
+    const batchVal = batchFilter.value;
+    const companyVal = companyFilter.value;
+    const searchVal = searchInput.value.toLowerCase();
+
+    const filtered = alumniData.filter(a => {
+      const matchBatch = (batchVal === "all") || (a.batch === batchVal);
+      const matchCompany = (companyVal === "all") || (a.company === companyVal);
+      const matchSearch = a.name.toLowerCase().includes(searchVal);
+      return matchBatch && matchCompany && matchSearch;
+    });
+
+    renderTable(filtered);
+    updateKPIs(filtered);
+    buildCharts(filtered);
+  }
+
+  function exportCSV(data){
+    const headers = ["Serial No","Alumni Name","Batch","Company Name","Status"];
+    const rows = data.map(a => [
+      a.sno,
+      a.name,
+      a.batch ? a.batch : "",
+      a.company,
+      a.status
+    ]);
+
+    const csv = [headers, ...rows]
+      .map(r => r.map(x => `"${String(x).replace(/"/g,'""')}"`).join(","))
+      .join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "cxo_meet_alumni.csv";
+    link.click();
+
+    URL.revokeObjectURL(url);
+  }
+
+  resetBtn.addEventListener("click", () => {
+    batchFilter.value = "all";
+    companyFilter.value = "all";
+    searchInput.value = "";
+    applyFilters();
+  });
+
+  batchFilter.addEventListener("change", applyFilters);
+  companyFilter.addEventListener("change", applyFilters);
+  searchInput.addEventListener("input", applyFilters);
+
+  exportBtn.addEventListener("click", () => {
+    // export filtered data (current view)
+    const batchVal = batchFilter.value;
+    const companyVal = companyFilter.value;
+    const searchVal = searchInput.value.toLowerCase();
+
+    const filtered = alumniData.filter(a => {
+      const matchBatch = (batchVal === "all") || (a.batch === batchVal);
+      const matchCompany = (companyVal === "all") || (a.company === companyVal);
+      const matchSearch = a.name.toLowerCase().includes(searchVal);
+      return matchBatch && matchCompany && matchSearch;
+    });
+
+    exportCSV(filtered);
+  });
+
+  printBtn.addEventListener("click", () => window.print());
+
+  // Init
+  populateFilters();
+  applyFilters();
+</script>
+
+</body>
+</html>
