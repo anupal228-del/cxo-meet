@@ -75,7 +75,6 @@
       margin-top:8px;
     }
 
-    /* Total Alumni */
     .total-box{
       margin-top:10px;
       display:inline-block;
@@ -128,7 +127,7 @@
     /* Equal widths except photo */
     th, td { width: 20%; }
 
-    /* Photo column */
+    /* Photo column fixed */
     th.photo-col, td.photo-col{
       width:80px !important;
       text-align:center;
@@ -142,6 +141,17 @@
       display:block;
       margin:0 auto;
       border:1px solid #ddd;
+    }
+
+    /* If no photo, keep empty space but column stays */
+    .no-photo{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      display:block;
+      margin:0 auto;
+      border:1px dashed #ccc;
+      background:transparent;
     }
 
     .badge{
@@ -202,6 +212,7 @@
     <table>
       <thead>
         <tr>
+          <!-- Photo heading blank -->
           <th class="photo-col"></th>
           <th>Name</th>
           <th>Batch</th>
@@ -219,55 +230,65 @@
   </div>
 
 <script>
-  const DEFAULT_IMG = "file:///C:/Users/anupa/Desktop/linkdin/default.jpg";
+  // ✅ Base folder path (same for all photos)
+  const PHOTO_BASE = "file:///C:/Users/anupa/Desktop/linkdin/";
 
-  // ✅ PHOTO MAP (from your provided perfect paths)
+  /*
+    ✅ PHOTO MAPPING SECTION (IMPORTANT)
+    YAHI PAR TU NAME KE HISAB SE PHOTO ADD KAREGA
+
+    Format:
+    "Exact Name": "Exact File Name"
+
+    Example:
+    "Bharat Parekh": "Bharat Parekh CLSA 1991-93.jpg"
+  */
   const photoMap = {
-    "Anoop Sharma": "file:///C:/Users/anupa/Desktop/linkdin/Anoop%20Sharma%20KPMG.jpg",
-    "Apram Apar": "file:///C:/Users/anupa/Desktop/linkdin/Apram%20Apar%20Ocean%20Network%20Express.jpg",
-    "Ashok Suvarna": "file:///C:/Users/anupa/Desktop/linkdin/Ashok%20Suvarna%201995-98%20Aditya%20brila%20mony.jpg",
-    "Barun V Mohanty": "file:///C:/Users/anupa/Desktop/linkdin/Barun%20V%20Mohanty%20Greenply%20Industries%20Limited.jpg",
-    "Bharat Parekh": "file:///C:/Users/anupa/Desktop/linkdin/Bharat%20Parekh%20CLSA%201991-93.jpg",
-    "Dhananjay Singh Kushwah": "file:///C:/Users/anupa/Desktop/linkdin/Dhananjay%20Singh%20Kushwah%20FOMOSO.jpg",
-    "Dipesh Gajera": "file:///C:/Users/anupa/Desktop/linkdin/Dipesh%20Gajera%20yes%20bank.jpg",
-    "Esha Krishnan": "file:///C:/Users/anupa/Desktop/linkdin/Esha%20Krishnan%20Mercedez%20Benz%20Research%20%26%20Development%20India.jpg",
-    "Gopinadhan K": "file:///C:/Users/anupa/Desktop/linkdin/Gopinadhan%20K%20EMA%20Partners.jpg",
-    "Gunjan Malviya": "file:///C:/Users/anupa/Desktop/linkdin/Gunjan%20Malviya%20Experian.jpg",
-    "Hardik Sheth": "file:///C:/Users/anupa/Desktop/linkdin/Hardik%20Sheth%20Tech%20mahindra.jpg",
-    "Ipsita Ansumala": "file:///C:/Users/anupa/Desktop/linkdin/Ipsita%20Ansumala%20SAP.jpg",
-    "Jignesh Dawda": "file:///C:/Users/anupa/Desktop/linkdin/Jignesh%20Dawda%20Syntrannia%20LLP.jpg",
-    "Latika S Kundu": "file:///C:/Users/anupa/Desktop/linkdin/Latika%20S%20Kundu%20Metropolitan%20Stock%20Exchange.jpg",
-    "Liza Singh": "file:///C:/Users/anupa/Desktop/linkdin/Liza%20Singh%20Kotak%20Mahindra%20singh.jpg",
-    "Manav Verma": "file:///C:/Users/anupa/Desktop/linkdin/Manav%20Verma%20IIFL.jpg",
-    "Mihir Ashar": "file:///C:/Users/anupa/Desktop/linkdin/Mihir%20Ashar%20Govindji%20Haridas.jpg",
-    "Minal Jain": "file:///C:/Users/anupa/Desktop/linkdin/Minal%20Jain%20Leadership%20Tilit.png",
-    "Mukesh Kanodia": "file:///C:/Users/anupa/Desktop/linkdin/Mukesh%20Kanodia%20PIRMAL%20VP.jpg",
-    "Nidhi Verma": "file:///C:/Users/anupa/Desktop/linkdin/Nidhi%20Verma%20Emkay.jpg",
-    "Prashant Nair": "file:///C:/Users/anupa/Desktop/linkdin/Prashant%20Nair%20Ambit%20Capital.jpg",
-    "Raghuveer Singh": "file:///C:/Users/anupa/Desktop/linkdin/Raghuveer%20Singh%20Zee5.jpg",
-    "Rahul Chiddarwar": "file:///C:/Users/anupa/Desktop/linkdin/Rahul%20Chiddarwar%20Unimoni.jpg",
-    "Rahul prasad": "file:///C:/Users/anupa/Desktop/linkdin/Rahul%20prasad%20USV%20Private%20Ltd.jpg",
-    "Rahul Rathi": "file:///C:/Users/anupa/Desktop/linkdin/Rahul%20Rathi%20FundsIndia%20Private%20Wealth.png",
-    "Reet Bhambani": "file:///C:/Users/anupa/Desktop/linkdin/Reet%20Bhambani%20EMA%20partenrs.jpg",
-    "Ronak Sheth": "file:///C:/Users/anupa/Desktop/linkdin/Ronak%20Sheth%20Opium%20Eyewear.jpg",
-    "Roshan Damodaran": "file:///C:/Users/anupa/Desktop/linkdin/Roshan%20Damodaran%20Medusind.jpg",
-    "Santosh Raval": "file:///C:/Users/anupa/Desktop/linkdin/Santosh%20Raval%20Axis%20Bank.jpg",
-    "Shalini Singh": "file:///C:/Users/anupa/Desktop/linkdin/Shalini%20Singh%20Hitachi%20Digital%20Services.jpg",
-    "Shekhar Asnani": "file:///C:/Users/anupa/Desktop/linkdin/Shekhar%20Asnani%20Jefferies.jpg",
-    "Sidharth Pratap": "file:///C:/Users/anupa/Desktop/linkdin/Sidharth%20Pratap%20Cognizant%20Technology%20Solutions.jpg",
-    "Sourjya Mohanty": "file:///C:/Users/anupa/Desktop/linkdin/Sourjya%20Mohanty%20DocuBay.jpg",
-    "Sujeesh Sukumaran": "file:///C:/Users/anupa/Desktop/linkdin/Sujeesh%20Sukumaran%20Pepper%20Wellness%20Private%20Ltd.jpg",
-    "Sushma Chopra": "file:///C:/Users/anupa/Desktop/linkdin/Sushma%20Chopra%20Mondelez%20international.jpg",
-    "Tarandeep Singh Sekhon": "file:///C:/Users/anupa/Desktop/linkdin/Tarandeep%20Singh%20Sekhon%20KidZania%20India.jpg",
-    "Triven Chopra": "file:///C:/Users/anupa/Desktop/linkdin/Triven%20Chopra%20NATWEST.jpg",
-    "Vikram Lalvani": "file:///C:/Users/anupa/Desktop/linkdin/Vikram%20Lalvani%20Sterling%20Holiday%20Resorts.jpg",
-    "Virendra Chaudhary": "file:///C:/Users/anupa/Desktop/linkdin/Virendra%20Chaudhary%20Algor%20supply%20chain.jpg",
-    "Vishal Vyas": "file:///C:/Users/anupa/Desktop/linkdin/Vishal%20Vyas%20DP%20WORLD.jpg",
-    "Akhil Mathur": "file:///C:/Users/anupa/Desktop/linkdin/Akhil%20Mathur%20Anand%20Rathi.jpg",
-    "Amitabh Dalal": "file:///C:/Users/anupa/Desktop/linkdin/Amitabh%20Dalal%20Utl.jpg",
-    "Ankesh Kumar": "file:///C:/Users/anupa/Desktop/linkdin/Ankesh%20Kumar%20ingram%20micro.png",
-    "Ankur Pagariya": "file:///C:/Users/anupa/Desktop/linkdin/Ankur%20Pagariya%20Indusind%20bank.jpg",
-    "Abhishek Singh": "file:///C:/Users/anupa/Desktop/linkdin/Abhishek%20Singh%20Adani%20Group.jpg"
+    "Anoop Sharma": "Anoop Sharma KPMG.jpg",
+    "Apram Apar": "Apram Apar Ocean Network Express.jpg",
+    "Ashok Suvarna": "Ashok Suvarna 1995-98 Aditya brila mony.jpg",
+    "Barun V Mohanty": "Barun V Mohanty Greenply Industries Limited.jpg",
+    "Bharat Parekh": "Bharat Parekh CLSA 1991-93.jpg",
+    "Dhananjay Singh Kushwah": "Dhananjay Singh Kushwah FOMOSO.jpg",
+    "Dipesh Gajera": "Dipesh Gajera yes bank.jpg",
+    "Esha Krishnan": "Esha Krishnan Mercedez Benz Research & Development India.jpg",
+    "Gopinadhan K": "Gopinadhan K EMA Partners.jpg",
+    "Gunjan Malviya": "Gunjan Malviya Experian.jpg",
+    "Hardik Sheth": "Hardik Sheth Tech mahindra.jpg",
+    "Ipsita Ansumala": "Ipsita Ansumala SAP.jpg",
+    "Jignesh Dawda": "Jignesh Dawda Syntrannia LLP.jpg",
+    "Latika S Kundu": "Latika S Kundu Metropolitan Stock Exchange.jpg",
+    "Liza Singh": "Liza Singh Kotak Mahindra singh.jpg",
+    "Manav Verma": "Manav Verma IIFL.jpg",
+    "Mihir Ashar": "Mihir Ashar Govindji Haridas.jpg",
+    "Minal Jain": "Minal Jain Leadership Tilit.png",
+    "Mukesh Kanodia": "Mukesh Kanodia PIRMAL VP.jpg",
+    "Nidhi Verma": "Nidhi Verma Emkay.jpg",
+    "Prashant Nair": "Prashant Nair Ambit Capital.jpg",
+    "Raghuveer Singh": "Raghuveer Singh Zee5.jpg",
+    "Rahul Chiddarwar": "Rahul Chiddarwar Unimoni.jpg",
+    "Rahul prasad": "Rahul prasad USV Private Ltd.jpg",
+    "Rahul Rathi": "Rahul Rathi FundsIndia Private Wealth.png",
+    "Reet Bhambani": "Reet Bhambani EMA partenrs.jpg",
+    "Ronak Sheth": "Ronak Sheth Opium Eyewear.jpg",
+    "Roshan Damodaran": "Roshan Damodaran Medusind.jpg",
+    "Santosh Raval": "Santosh Raval Axis Bank.jpg",
+    "Shalini Singh": "Shalini Singh Hitachi Digital Services.jpg",
+    "Shekhar Asnani": "Shekhar Asnani Jefferies.jpg",
+    "Sidharth Pratap": "Sidharth Pratap Cognizant Technology Solutions.jpg",
+    "Sourjya Mohanty": "Sourjya Mohanty DocuBay.jpg",
+    "Sujeesh Sukumaran": "Sujeesh Sukumaran Pepper Wellness Private Ltd.jpg",
+    "Sushma Chopra": "Sushma Chopra Mondelez international.jpg",
+    "Tarandeep Singh Sekhon": "Tarandeep Singh Sekhon KidZania India.jpg",
+    "Triven Chopra": "Triven Chopra NATWEST.jpg",
+    "Vikram Lalvani": "Vikram Lalvani Sterling Holiday Resorts.jpg",
+    "Virendra Chaudhary": "Virendra Chaudhary Algor supply chain.jpg",
+    "Vishal Vyas": "Vishal Vyas DP WORLD.jpg",
+    "Akhil Mathur": "Akhil Mathur Anand Rathi.jpg",
+    "Amitabh Dalal": "Amitabh Dalal Utl.jpg",
+    "Ankesh Kumar": "Ankesh Kumar ingram micro.png",
+    "Ankur Pagariya": "Ankur Pagariya Indusind bank.jpg",
+    "Abhishek Singh": "Abhishek Singh Adani Group.jpg"
   };
 
   // ✅ FULL DATA (69)
@@ -342,9 +363,10 @@
     { name: "Aditya Mittal", batch: "2002-2004", company: "Kellanova", designation: "Head - Commercial Experience", status: "Confirmed" }
   ];
 
-  // Attach photos using map
+  // Attach photo (ONLY if exists in photoMap)
   alumniData.forEach(a => {
-    a.photo = photoMap[a.name] || DEFAULT_IMG;
+    const fileName = photoMap[a.name];
+    a.photo = fileName ? (PHOTO_BASE + encodeURIComponent(fileName).replace(/%2F/g, "/")) : "";
   });
 
   const tableBody = document.getElementById("tableBody");
@@ -385,13 +407,14 @@
     data.forEach(a => {
       const tr = document.createElement("tr");
 
+      // if photo exists -> show image
+      // else -> show empty placeholder circle (but no image)
+      const photoCell = a.photo
+        ? `<img class="avatar" src="${a.photo}" alt="${a.name}" />`
+        : `<span class="no-photo"></span>`;
+
       tr.innerHTML = `
-        <td class="photo-col">
-          <img class="avatar"
-               src="${a.photo}"
-               alt="${a.name}"
-               onerror="this.onerror=null; this.src='${DEFAULT_IMG}';" />
-        </td>
+        <td class="photo-col">${photoCell}</td>
         <td><b>${a.name}</b></td>
         <td>${a.batch ? a.batch : "-"}</td>
         <td>${a.company}</td>
