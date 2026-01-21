@@ -7,6 +7,7 @@
 
   <style>
     *{ box-sizing:border-box; font-family: Arial, sans-serif; }
+
     body{
       margin:0;
       background:#f4f6f9;
@@ -74,7 +75,7 @@
       margin-top:8px;
     }
 
-    /* Total Alumni Box */
+    /* Total Alumni */
     .total-box{
       margin-top:10px;
       display:inline-block;
@@ -124,27 +125,23 @@
 
     tbody tr:hover{ background:#fafafa; }
 
-    /* Equal width for all columns except photo */
+    /* Equal widths except photo */
     th, td { width: 20%; }
 
-    /* Photo column fixed smaller */
+    /* Photo column */
     th.photo-col, td.photo-col{
       width:80px !important;
       text-align:center;
     }
 
     .avatar{
-      width:40px;
-      height:40px;
+      width:42px;
+      height:42px;
       border-radius:50%;
       object-fit:cover;
       display:block;
       margin:0 auto;
       border:1px solid #ddd;
-    }
-
-    .highlight{
-      background:#fff59d;
     }
 
     .badge{
@@ -163,7 +160,6 @@
       color:#666;
     }
 
-    /* Print */
     @media print{
       body{ background:#fff; padding:0; }
       .filters, .footer, .btns { display:none !important; }
@@ -202,15 +198,14 @@
     </div>
   </div>
 
-  <!-- Table -->
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th class="photo-col"></th> <!-- NO HEADING FOR PHOTO -->
+          <th class="photo-col"></th>
           <th>Name</th>
           <th>Batch</th>
-          <th>Company</th>
+          <th>Company Name</th>
           <th>Designation</th>
           <th>Status</th>
         </tr>
@@ -220,119 +215,136 @@
   </div>
 
   <div class="footer">
-    CXO MEET Alumni Dashboard (Search + Filters + Export + Print)
+    CXO MEET Alumni Dashboard (Search + Filter + Export + Print)
   </div>
 
 <script>
-  // ✅ Your Photo Folder (Method 2)
-  const PHOTO_BASE = "file:///C:/Users/anupa/Desktop/linkdin/";
+  const DEFAULT_IMG = "file:///C:/Users/anupa/Desktop/linkdin/default.jpg";
 
-  // ✅ Photo Map (Your Exact Files)
+  // ✅ PHOTO MAP (from your provided perfect paths)
   const photoMap = {
-    "Anoop Sharma": PHOTO_BASE + "Anoop Sharma KPMG.jpg",
-    "Apram Apar": PHOTO_BASE + "Apram Apar Ocean Network Express.jpg",
-    "Ashok Suvarna": PHOTO_BASE + "Ashok Suvarna 1995-98 Aditya brila mony.jpg",
-    "Barun V Mohanty": PHOTO_BASE + "Barun V Mohanty Greenply Industries Limited.jpg",
-    "Bharat Parekh": PHOTO_BASE + "Bharat Parekh CLSA 1991-93.jpg",
-    "Dhananjay Singh Kushwah": PHOTO_BASE + "Dhananjay Singh Kushwah FOMOSO.jpg",
-    "Dipesh Gajera": PHOTO_BASE + "Dipesh Gajera yes bank.jpg",
-    "Esha Krishnan": PHOTO_BASE + "Esha Krishnan Mercedez Benz Research & Development India.jpg",
-    "Gopinadhan K": PHOTO_BASE + "Gopinadhan K EMA Partners.jpg",
-    "Gunjan Malviya": PHOTO_BASE + "Gunjan Malviya Experian.jpg",
-    "Hardik Sheth": PHOTO_BASE + "Hardik Sheth Tech mahindra.jpg",
-    "Ipsita Ansumala": PHOTO_BASE + "Ipsita Ansumala SAP.jpg",
-    "Jignesh Dawda": PHOTO_BASE + "Jignesh Dawda Syntrannia LLP.jpg",
-    "Latika S Kundu": PHOTO_BASE + "Latika S Kundu Metropolitan Stock Exchange.jpg",
-    "Liza Singh": PHOTO_BASE + "Liza Singh Kotak Mahindra singh.jpg",
-    "Manav Verma": PHOTO_BASE + "Manav Verma IIFL.jpg",
-    "Meetiksha Mehta": PHOTO_BASE + "Meetiksha Takhtani yes bank.jpg",
-    "Mihir Ashar": PHOTO_BASE + "Mihir Ashar Govindji Haridas.jpg",
-    "Minal Jain": PHOTO_BASE + "Minal Jain Leadership Tilit.png",
-    "Mukesh Kanodia": PHOTO_BASE + "Mukesh Kanodia PIRMAL VP.jpg",
-    "Nidhi Verma": PHOTO_BASE + "Nidhi Verma Emkay.jpg",
-    "Prashant Nair": PHOTO_BASE + "Prashant Nair Ambit Capital.jpg",
-    "Raghuveer Singh": PHOTO_BASE + "Raghuveer Singh Zee5.jpg",
-    "Rahul Chiddarwar": PHOTO_BASE + "Rahul Chiddarwar Unimoni.jpg",
-    "Rahul prasad": PHOTO_BASE + "Rahul prasad USV Private Ltd.jpg",
-    "Rahul Rathi": PHOTO_BASE + "Rahul Rathi FundsIndia Private Wealth.png",
-    "Reet Bhambani": PHOTO_BASE + "Reet Bhambani EMA partenrs.jpg",
-    "Ronak Sheth": PHOTO_BASE + "Ronak Sheth Opium Eyewear.jpg",
-    "Roshan Damodaran": PHOTO_BASE + "Roshan Damodaran Medusind.jpg",
-    "Santosh Raval": PHOTO_BASE + "Santosh Raval Axis Bank.jpg",
-    "Shalini Singh": PHOTO_BASE + "Shalini Singh Hitachi Digital Services.jpg",
-    "Shekhar Asnani": PHOTO_BASE + "Shekhar Asnani Jefferies.jpg",
-    "Sidharth Pratap": PHOTO_BASE + "Sidharth Pratap Cognizant Technology Solutions.jpg",
-    "Sourjya Mohanty": PHOTO_BASE + "Sourjya Mohanty DocuBay.jpg",
-    "Sujeesh Sukumaran": PHOTO_BASE + "Sujeesh Sukumaran Pepper Wellness Private Ltd.jpg",
-    "Sushma Chopra": PHOTO_BASE + "Sushma Chopra Mondelez international.jpg",
-    "Tarandeep Singh Sekhon": PHOTO_BASE + "Tarandeep Singh Sekhon KidZania India.jpg",
-    "Triven Chopra": PHOTO_BASE + "Triven Chopra NATWEST.jpg",
-    "Vijay Haswani": PHOTO_BASE + "Vijay Haswani Navadha.jpg",
-    "Vikram Lalvani": PHOTO_BASE + "Vikram Lalvani Sterling Holiday Resorts.jpg",
-    "Virendra Chaudhary": PHOTO_BASE + "Virendra Chaudhary Algor supply chain.jpg",
-    "Vishal Vyas": PHOTO_BASE + "Vishal Vyas DP WORLD.jpg",
-    "Akhil Mathur": PHOTO_BASE + "Akhil Mathur Anand Rathi.jpg",
-    "Amitabh Dalal": PHOTO_BASE + "Amitabh Dalal Utl.jpg",
-    "Ankesh Kumar": PHOTO_BASE + "Ankesh Kumar ingram micro.png",
-    "Ankur Pagariya": PHOTO_BASE + "Ankur Pagariya Indusind bank.jpg"
+    "Anoop Sharma": "file:///C:/Users/anupa/Desktop/linkdin/Anoop%20Sharma%20KPMG.jpg",
+    "Apram Apar": "file:///C:/Users/anupa/Desktop/linkdin/Apram%20Apar%20Ocean%20Network%20Express.jpg",
+    "Ashok Suvarna": "file:///C:/Users/anupa/Desktop/linkdin/Ashok%20Suvarna%201995-98%20Aditya%20brila%20mony.jpg",
+    "Barun V Mohanty": "file:///C:/Users/anupa/Desktop/linkdin/Barun%20V%20Mohanty%20Greenply%20Industries%20Limited.jpg",
+    "Bharat Parekh": "file:///C:/Users/anupa/Desktop/linkdin/Bharat%20Parekh%20CLSA%201991-93.jpg",
+    "Dhananjay Singh Kushwah": "file:///C:/Users/anupa/Desktop/linkdin/Dhananjay%20Singh%20Kushwah%20FOMOSO.jpg",
+    "Dipesh Gajera": "file:///C:/Users/anupa/Desktop/linkdin/Dipesh%20Gajera%20yes%20bank.jpg",
+    "Esha Krishnan": "file:///C:/Users/anupa/Desktop/linkdin/Esha%20Krishnan%20Mercedez%20Benz%20Research%20%26%20Development%20India.jpg",
+    "Gopinadhan K": "file:///C:/Users/anupa/Desktop/linkdin/Gopinadhan%20K%20EMA%20Partners.jpg",
+    "Gunjan Malviya": "file:///C:/Users/anupa/Desktop/linkdin/Gunjan%20Malviya%20Experian.jpg",
+    "Hardik Sheth": "file:///C:/Users/anupa/Desktop/linkdin/Hardik%20Sheth%20Tech%20mahindra.jpg",
+    "Ipsita Ansumala": "file:///C:/Users/anupa/Desktop/linkdin/Ipsita%20Ansumala%20SAP.jpg",
+    "Jignesh Dawda": "file:///C:/Users/anupa/Desktop/linkdin/Jignesh%20Dawda%20Syntrannia%20LLP.jpg",
+    "Latika S Kundu": "file:///C:/Users/anupa/Desktop/linkdin/Latika%20S%20Kundu%20Metropolitan%20Stock%20Exchange.jpg",
+    "Liza Singh": "file:///C:/Users/anupa/Desktop/linkdin/Liza%20Singh%20Kotak%20Mahindra%20singh.jpg",
+    "Manav Verma": "file:///C:/Users/anupa/Desktop/linkdin/Manav%20Verma%20IIFL.jpg",
+    "Mihir Ashar": "file:///C:/Users/anupa/Desktop/linkdin/Mihir%20Ashar%20Govindji%20Haridas.jpg",
+    "Minal Jain": "file:///C:/Users/anupa/Desktop/linkdin/Minal%20Jain%20Leadership%20Tilit.png",
+    "Mukesh Kanodia": "file:///C:/Users/anupa/Desktop/linkdin/Mukesh%20Kanodia%20PIRMAL%20VP.jpg",
+    "Nidhi Verma": "file:///C:/Users/anupa/Desktop/linkdin/Nidhi%20Verma%20Emkay.jpg",
+    "Prashant Nair": "file:///C:/Users/anupa/Desktop/linkdin/Prashant%20Nair%20Ambit%20Capital.jpg",
+    "Raghuveer Singh": "file:///C:/Users/anupa/Desktop/linkdin/Raghuveer%20Singh%20Zee5.jpg",
+    "Rahul Chiddarwar": "file:///C:/Users/anupa/Desktop/linkdin/Rahul%20Chiddarwar%20Unimoni.jpg",
+    "Rahul prasad": "file:///C:/Users/anupa/Desktop/linkdin/Rahul%20prasad%20USV%20Private%20Ltd.jpg",
+    "Rahul Rathi": "file:///C:/Users/anupa/Desktop/linkdin/Rahul%20Rathi%20FundsIndia%20Private%20Wealth.png",
+    "Reet Bhambani": "file:///C:/Users/anupa/Desktop/linkdin/Reet%20Bhambani%20EMA%20partenrs.jpg",
+    "Ronak Sheth": "file:///C:/Users/anupa/Desktop/linkdin/Ronak%20Sheth%20Opium%20Eyewear.jpg",
+    "Roshan Damodaran": "file:///C:/Users/anupa/Desktop/linkdin/Roshan%20Damodaran%20Medusind.jpg",
+    "Santosh Raval": "file:///C:/Users/anupa/Desktop/linkdin/Santosh%20Raval%20Axis%20Bank.jpg",
+    "Shalini Singh": "file:///C:/Users/anupa/Desktop/linkdin/Shalini%20Singh%20Hitachi%20Digital%20Services.jpg",
+    "Shekhar Asnani": "file:///C:/Users/anupa/Desktop/linkdin/Shekhar%20Asnani%20Jefferies.jpg",
+    "Sidharth Pratap": "file:///C:/Users/anupa/Desktop/linkdin/Sidharth%20Pratap%20Cognizant%20Technology%20Solutions.jpg",
+    "Sourjya Mohanty": "file:///C:/Users/anupa/Desktop/linkdin/Sourjya%20Mohanty%20DocuBay.jpg",
+    "Sujeesh Sukumaran": "file:///C:/Users/anupa/Desktop/linkdin/Sujeesh%20Sukumaran%20Pepper%20Wellness%20Private%20Ltd.jpg",
+    "Sushma Chopra": "file:///C:/Users/anupa/Desktop/linkdin/Sushma%20Chopra%20Mondelez%20international.jpg",
+    "Tarandeep Singh Sekhon": "file:///C:/Users/anupa/Desktop/linkdin/Tarandeep%20Singh%20Sekhon%20KidZania%20India.jpg",
+    "Triven Chopra": "file:///C:/Users/anupa/Desktop/linkdin/Triven%20Chopra%20NATWEST.jpg",
+    "Vikram Lalvani": "file:///C:/Users/anupa/Desktop/linkdin/Vikram%20Lalvani%20Sterling%20Holiday%20Resorts.jpg",
+    "Virendra Chaudhary": "file:///C:/Users/anupa/Desktop/linkdin/Virendra%20Chaudhary%20Algor%20supply%20chain.jpg",
+    "Vishal Vyas": "file:///C:/Users/anupa/Desktop/linkdin/Vishal%20Vyas%20DP%20WORLD.jpg",
+    "Akhil Mathur": "file:///C:/Users/anupa/Desktop/linkdin/Akhil%20Mathur%20Anand%20Rathi.jpg",
+    "Amitabh Dalal": "file:///C:/Users/anupa/Desktop/linkdin/Amitabh%20Dalal%20Utl.jpg",
+    "Ankesh Kumar": "file:///C:/Users/anupa/Desktop/linkdin/Ankesh%20Kumar%20ingram%20micro.png",
+    "Ankur Pagariya": "file:///C:/Users/anupa/Desktop/linkdin/Ankur%20Pagariya%20Indusind%20bank.jpg",
+    "Abhishek Singh": "file:///C:/Users/anupa/Desktop/linkdin/Abhishek%20Singh%20Adani%20Group.jpg"
   };
 
-  // ✅ Alumni Data (Your Updated List)
+  // ✅ FULL DATA (69)
   const alumniData = [
-    { name: "Bharat Parekh", batch: "1991-1993", company: "CLSA", designation: "Executive Director", status: "Confirmed", highlight: true },
-    { name: "Ashok Suvarna", batch: "1995-1998", company: "Aditya Birla Money", designation: "CEO", status: "Confirmed", highlight: false },
-    { name: "Kartik Iyer", batch: "2005-2007", company: "Cohizon Life Sciences", designation: "CHRO", status: "Confirmed", highlight: false },
-    { name: "Dinesh Pligoakar", batch: "1991-1993", company: "Barcode India", designation: "Executive VP and CCO", status: "Confirmed", highlight: false },
-    { name: "Rahul Chiddarwar", batch: "1996-1998", company: "Unimoni", designation: "CEO", status: "Confirmed", highlight: true },
-    { name: "Sunjoy Dhawan", batch: "1991-1993", company: "DHL Express India", designation: "CHRO", status: "Confirmed", highlight: false },
-    { name: "Prashant Nair", batch: "1996-1998", company: "Ambit Capital", designation: "Director", status: "Confirmed", highlight: false },
-    { name: "Reet Bhambani", batch: "2001-2003", company: "EMA Partenrs", designation: "MD and COO", status: "Confirmed", highlight: false },
-    { name: "Anoop Sharma", batch: "2005-2007", company: "KPMG", designation: "Director", status: "Confirmed", highlight: false },
-    { name: "Dipu Ranjan", batch: "2004-2006", company: "HDFC", designation: "Senior VP", status: "Confirmed", highlight: false },
-    { name: "Hardik Sheth", batch: "2004-2006", company: "Tech Mahindra", designation: "Tech Head", status: "Confirmed", highlight: false },
-    { name: "Sujeesh Sukumaran", batch: "1993-1995", company: "Pepper Wellness Private Ltd", designation: "Founder", status: "Confirmed", highlight: false },
-    { name: "Lalit Kumar Gupta", batch: "", company: "Cotton Corporation of India", designation: "CMD", status: "Confirmed", highlight: false },
-    { name: "Vijay Haswani", batch: "2002-2004", company: "Navadhan", designation: "Co-Founder", status: "Confirmed", highlight: false },
-    { name: "Latika S Kundu", batch: "1994-1996", company: "Metropolitan Stock Exchange", designation: "MD & CEO", status: "Confirmed", highlight: false },
-    { name: "Amitabh Dalal", batch: "2004-2006", company: "UTI", designation: "Vice President", status: "Confirmed", highlight: false },
-    { name: "Siva Rama Kirshna", batch: "2011-2013", company: "LA Technologies Pvt Ltd", designation: "Director- Sales", status: "Confirmed", highlight: false },
-    { name: "Dipesh Gajera", batch: "2004-2006", company: "Yes Bank", designation: "Head- Yes Bank Loan vertical", status: "Confirmed", highlight: true },
-    { name: "Triven Chopra", batch: "2004-2006", company: "NatWest", designation: "Director", status: "Confirmed", highlight: false },
-    { name: "Ankita Kapoor Chopra", batch: "2004-2006", company: "Anand Rathi", designation: "Associate Director", status: "Confirmed", highlight: false },
-    { name: "Manav Verma", batch: "2000-2002", company: "IIFL", designation: "CMO", status: "Confirmed", highlight: false },
-    { name: "Mukesh Kanodia", batch: "2009-2011", company: "Piramal", designation: "Senior VP", status: "Confirmed", highlight: false },
-    { name: "Tarandeep Singh Sekhon", batch: "2005-2007", company: "KidZania India", designation: "CBO", status: "Confirmed", highlight: true },
-    { name: "Sourjya Mohanty", batch: "", company: "DocuBay", designation: "COO", status: "Confirmed", highlight: true },
-    { name: "Shekhar Asnani", batch: "2010-2012", company: "Jefferies", designation: "Director", status: "Confirmed", highlight: false },
-    { name: "Liza Singh", batch: "2010-2012", company: "Kotak Mahindra Singh", designation: "SVP", status: "Confirmed", highlight: false },
-    { name: "Nidhi Verma", batch: "2003-2005", company: "Emkay", designation: "Head-Marketing", status: "Confirmed", highlight: false },
-    { name: "Apram Apar", batch: "2002-2004", company: "Ocean Network Express", designation: "General Manager", status: "Confirmed", highlight: false },
-    { name: "Akhil Mathur", batch: "2004-2006", company: "Anand Rathi", designation: "Associate Director", status: "Confirmed", highlight: false },
-    { name: "Ankesh Kumar", batch: "2002-2004", company: "Ingram Micro", designation: "Director", status: "Confirmed", highlight: false },
-    { name: "Virendra Chaudhary", batch: "2010-2012", company: "Algor supply chain", designation: "Founder", status: "Confirmed", highlight: false },
-    { name: "Gopinadhan K", batch: "2009-2011", company: "EMA Partners", designation: "Partner", status: "Confirmed", highlight: true },
-    { name: "Jignesh Dawda", batch: "2005-2007", company: "Syntrannia LLP", designation: "Co-Founder & CEO", status: "Confirmed", highlight: true },
-    { name: "Ankur Pagariya", batch: "2009-2011", company: "IndusInd Bank", designation: "Vice President", status: "Confirmed", highlight: false },
-    { name: "Mihir Ashar", batch: "1993-1995", company: "Govindji Haridas", designation: "Founder", status: "Confirmed", highlight: false },
-    { name: "Dhananjay Singh Kushwah", batch: "2012-2014", company: "Founder", designation: "FOMOSO", status: "Confirmed", highlight: true },
-    { name: "Vikram Lalvani", batch: "1995 - 1997", company: "Sterling Holiday Resorts", designation: "MD & CEO", status: "Confirmed", highlight: false },
-    { name: "Santosh Raval", batch: "2012-2014", company: "Axis Bank", designation: "Vice President", status: "Confirmed", highlight: false },
-    { name: "Gunjan Malviya", batch: "2007-2009", company: "Experian", designation: "HR-Director", status: "Confirmed", highlight: false },
-    { name: "Ronak Sheth", batch: "1992-1994", company: "Opium Eyewear", designation: "Founder", status: "Confirmed", highlight: false },
-    { name: "Rahul Rathi", batch: "2007-2009", company: "FundsIndia Private Wealth", designation: "Market- Director", status: "Confirmed", highlight: false },
-    { name: "Rahul prasad", batch: "2004-2006", company: "USV Private Ltd", designation: "Vice President", status: "Confirmed", highlight: false },
-    { name: "Sushma Chopra", batch: "1998-2000", company: "Mondelez international", designation: "Global Lead", status: "Confirmed", highlight: false },
-    { name: "Minal Jain", batch: "2008-2010", company: "Leadership Tilit", designation: "Co-founder & Director", status: "Confirmed", highlight: false },
-    { name: "Roshan Damodaran", batch: "", company: "Medusind", designation: "HR Head", status: "Confirmed", highlight: false },
-    { name: "Esha Krishnan", batch: "", company: "Mercedez Benz Research & Development India", designation: "HR Head", status: "Confirmed", highlight: false },
-    { name: "Barun V Mohanty", batch: "2007-2009", company: "Greenply Industries Limited", designation: "General Manager", status: "Confirmed", highlight: false },
-    { name: "Shalini Singh", batch: "", company: "Hitachi Digital Services", designation: "HR Head", status: "Confirmed", highlight: false },
-    { name: "Ipsita Ansumala", batch: "2000-2004", company: "SAP", designation: "Partner Business Manager", status: "Confirmed", highlight: false }
+    { name: "Bharat Parekh", batch: "1991-1993", company: "CLSA", designation: "Executive Director", status: "Confirmed" },
+    { name: "Ashok Suvarna", batch: "1995-1998", company: "Aditya Birla Money", designation: "CEO", status: "Confirmed" },
+    { name: "Kartik Iyer", batch: "2005-2007", company: "Cohizon Life Sciences", designation: "CHRO", status: "Confirmed" },
+    { name: "Dinesh Pligoakar", batch: "1991-1993", company: "Barcode India", designation: "Executive VP and CCO", status: "Confirmed" },
+    { name: "Rahul Chiddarwar", batch: "1996-1998", company: "Unimoni", designation: "CEO", status: "Confirmed" },
+    { name: "Sunjoy Dhawan", batch: "1991-1993", company: "DHL Express India", designation: "CHRO", status: "Confirmed" },
+    { name: "Prashant Nair", batch: "1996-1998", company: "Ambit Capital", designation: "Director", status: "Confirmed" },
+    { name: "Reet Bhambani", batch: "2001-2003", company: "EMA Partenrs", designation: "MD and COO", status: "Confirmed" },
+    { name: "Anoop Sharma", batch: "2005-2007", company: "KPMG", designation: "Director", status: "Confirmed" },
+    { name: "Dipu Ranjan", batch: "2004-2006", company: "HDFC", designation: "Senior VP", status: "Confirmed" },
+    { name: "Hardik Sheth", batch: "2004-2006", company: "Tech Mahindra", designation: "Tech Head", status: "Confirmed" },
+    { name: "Sujeesh Sukumaran", batch: "1993-1995", company: "Pepper Wellness Private Ltd", designation: "Founder", status: "Confirmed" },
+    { name: "Lalit Kumar Gupta", batch: "", company: "Cotton Corporation of India", designation: "CMD", status: "Confirmed" },
+    { name: "Vijay Haswani", batch: "2002-2004", company: "Navadhan", designation: "Co-Founder", status: "Confirmed" },
+    { name: "Latika S Kundu", batch: "1994-1996", company: "Metropolitan Stock Exchange", designation: "MD & CEO", status: "Confirmed" },
+    { name: "Amitabh Dalal", batch: "2004-2006", company: "UTI", designation: "Vice President", status: "Confirmed" },
+    { name: "Siva Rama Kirshna", batch: "2011-2013", company: "LA Technologies Pvt Ltd", designation: "Director- Sales", status: "Confirmed" },
+    { name: "Dipesh Gajera", batch: "2004-2006", company: "Yes Bank", designation: "Head- Yes Bank Loan vertical", status: "Confirmed" },
+    { name: "Triven Chopra", batch: "2004-2006", company: "NatWest", designation: "Director", status: "Confirmed" },
+    { name: "Ankita Kapoor Chopra", batch: "2004-2006", company: "Anand Rathi", designation: "Associate Director", status: "Confirmed" },
+    { name: "Manav Verma", batch: "2000-2002", company: "IIFL", designation: "CMO", status: "Confirmed" },
+    { name: "Mukesh Kanodia", batch: "2009-2011", company: "Piramal", designation: "Senior VP", status: "Confirmed" },
+    { name: "Tarandeep Singh Sekhon", batch: "2005-2007", company: "KidZania India", designation: "CBO", status: "Confirmed" },
+    { name: "Sourjya Mohanty", batch: "", company: "DocuBay", designation: "COO", status: "Confirmed" },
+    { name: "Prachi Sahay", batch: "2008-2010", company: "Disney -Hotsar", designation: "Head of Products", status: "Confirmed" },
+    { name: "Richpal Singh", batch: "2006-2008", company: "HDFC Bank", designation: "Senior VP", status: "Confirmed" },
+    { name: "Shekhar Asnani", batch: "2010-2012", company: "Jefferies", designation: "Director", status: "Confirmed" },
+    { name: "Arun Bharath", batch: "2007-2009", company: "P & C Insurance Vertical", designation: "Director", status: "Confirmed" },
+    { name: "Liza Singh", batch: "2010-2012", company: "Kotak Mahindra Singh", designation: "SVP", status: "Confirmed" },
+    { name: "Nidhi Verma", batch: "2003-2005", company: "Emkay", designation: "Head-Marketing", status: "Confirmed" },
+    { name: "Apram Apar", batch: "2002-2004", company: "Ocean Network Express", designation: "General Manager", status: "Confirmed" },
+    { name: "Akhil Mathur", batch: "2004-2006", company: "Anand Rathi", designation: "Associate Director", status: "Confirmed" },
+    { name: "Ankesh Kumar", batch: "2002-2004", company: "Ingram Micro", designation: "Director", status: "Confirmed" },
+    { name: "Anuja Ghosh", batch: "2005-2007", company: "SBICAP ventures", designation: "Head-HR", status: "Confirmed" },
+    { name: "Virendra Chaudhary", batch: "2010-2012", company: "Algor supply chain", designation: "Founder", status: "Confirmed" },
+    { name: "Prajwal Ghosh", batch: "2005-2007", company: "Hafele", designation: "GM", status: "Confirmed" },
+    { name: "Romita B", batch: "2008-2010", company: "GEP Worldwide", designation: "Associate Director", status: "Confirmed" },
+    { name: "Gopinadhan K", batch: "2009-2011", company: "EMA Partners", designation: "Partner", status: "Confirmed" },
+    { name: "Jignesh Dawda", batch: "2005-2007", company: "Syntrannia LLP", designation: "Co-Founder & CEO", status: "Confirmed" },
+    { name: "Anup Bauskar", batch: "2015-2017", company: "Turtle mint", designation: "Associate Director", status: "Confirmed" },
+    { name: "Ankur Pagariya", batch: "2009-2011", company: "IndusInd Bank", designation: "Vice President", status: "Confirmed" },
+    { name: "Mihir Ashar", batch: "1993-1995", company: "Govindji Haridas", designation: "Founder", status: "Confirmed" },
+    { name: "Dhananjay Singh Kushwah", batch: "2012-2014", company: "Founder", designation: "FOMOSO", status: "Confirmed" },
+    { name: "Yashraj Kesharwani", batch: "2012-2014", company: "South India Business Head", designation: "Times of India", status: "Confirmed" },
+    { name: "Vikram Lalvani", batch: "1995 - 1997", company: "Sterling Holiday Resorts", designation: "MD & CEO", status: "Confirmed" },
+    { name: "Naman Rastogi", batch: "2008-2010", company: "Jio Hostar", designation: "Senior Director", status: "Confirmed" },
+    { name: "Santosh Raval", batch: "2012-2014", company: "Axis Bank", designation: "Vice President", status: "Confirmed" },
+    { name: "Shweta Laddha", batch: "2007-2009", company: "Multiple Asset Management", designation: "Head-Compliance", status: "Confirmed" },
+    { name: "Gunjan Malviya", batch: "2007-2009", company: "Experian", designation: "HR-Director", status: "Confirmed" },
+    { name: "Ronak Sheth", batch: "1992-1994", company: "Opium Eyewear", designation: "Founder", status: "Confirmed" },
+    { name: "Rahul Rathi", batch: "2007-2009", company: "FundsIndia Private Wealth", designation: "Market- Director", status: "Confirmed" },
+    { name: "Rahul prasad", batch: "2004-2006", company: "USV Private Ltd", designation: "Vice President", status: "Confirmed" },
+    { name: "Sushma Chopra", batch: "1998-2000", company: "Mondelez international", designation: "Global Lead", status: "Confirmed" },
+    { name: "Neha Srivastava", batch: "2005-2007", company: "LeadSquared", designation: "Head- people nd culture", status: "Confirmed" },
+    { name: "Minal Jain", batch: "2008-2010", company: "Leadership Tilit", designation: "Co-founder & Director", status: "Confirmed" },
+    { name: "Uday Mathur", batch: "1994-1996", company: "Independent", designation: "Director", status: "Confirmed" },
+    { name: "Roshan Damodaran", batch: "", company: "Medusind", designation: "HR Head", status: "Confirmed" },
+    { name: "Esha Krishnan", batch: "", company: "Mercedez Benz Research & Development India", designation: "HR Head", status: "Confirmed" },
+    { name: "Utpal Das", batch: "2006-2008", company: "EMA Partners", designation: "Clinet Partner", status: "Confirmed" },
+    { name: "Barun V Mohanty", batch: "2007-2009", company: "Greenply Industries Limited", designation: "General Manager", status: "Confirmed" },
+    { name: "Shalini Singh", batch: "", company: "Hitachi Digital Services", designation: "HR Head", status: "Confirmed" },
+    { name: "Abhishek Jadav", batch: "2010-2012", company: "Coldman Logistics", designation: "President operations", status: "Confirmed" },
+    { name: "Shantanu Patnaik", batch: "", company: "Hindalco Industries Ltd", designation: "Senior GM", status: "Confirmed" },
+    { name: "Meetiksha Mehta", batch: "2009-2011", company: "Yes Bank", designation: "Senior Vice President", status: "Confirmed" },
+    { name: "Ipsita Ansumala", batch: "2000-2004", company: "SAP", designation: "Partner Business Manager", status: "Confirmed" },
+    { name: "Niranjan Prasad Bhagwat", batch: "2003-2005", company: "First Advantage", designation: "Associate Vice President", status: "Confirmed" },
+    { name: "Vishal Vyas", batch: "2009-2011", company: "DP WORLD", designation: "Director - CPG & Retail Sector", status: "Confirmed" },
+    { name: "Aditya Mittal", batch: "2002-2004", company: "Kellanova", designation: "Head - Commercial Experience", status: "Confirmed" }
   ];
 
-  // Add photo automatically from photoMap
+  // Attach photos using map
   alumniData.forEach(a => {
-    a.photo = photoMap[a.name] || (PHOTO_BASE + "default.jpg");
+    a.photo = photoMap[a.name] || DEFAULT_IMG;
   });
 
   const tableBody = document.getElementById("tableBody");
@@ -372,11 +384,13 @@
 
     data.forEach(a => {
       const tr = document.createElement("tr");
-      if (a.highlight) tr.classList.add("highlight");
 
       tr.innerHTML = `
         <td class="photo-col">
-          <img class="avatar" src="${a.photo}" alt="${a.name}">
+          <img class="avatar"
+               src="${a.photo}"
+               alt="${a.name}"
+               onerror="this.onerror=null; this.src='${DEFAULT_IMG}';" />
         </td>
         <td><b>${a.name}</b></td>
         <td>${a.batch ? a.batch : "-"}</td>
@@ -408,7 +422,7 @@
   }
 
   function exportCSV(data){
-    const headers = ["Name","Batch","Company","Designation","Status"];
+    const headers = ["Name","Batch","Company Name","Designation","Status"];
     const rows = data.map(a => [
       a.name,
       a.batch ? a.batch : "",
