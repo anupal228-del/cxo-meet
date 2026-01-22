@@ -14,6 +14,49 @@
       color:#111;
     }
 
+    /* TOP BAR */
+    .topbar{
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 6px 16px rgba(0,0,0,0.06);
+      padding:12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .brand-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:220px;
+    }
+
+    .itm-logo{
+      width:52px;
+      height:52px;
+      object-fit:contain;
+      border-radius:12px;
+      border:1px solid #eee;
+      background:#fff;
+      padding:6px;
+    }
+
+    .center-title{
+      flex:1;
+      text-align:center;
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:1px;
+    }
+
+    .right-space{
+      min-width:220px;
+    }
+
+    /* HEADER BELOW */
     .header{
       display:flex;
       justify-content:space-between;
@@ -25,7 +68,7 @@
 
     .title-area h1{
       margin:0;
-      font-size:22px;
+      font-size:18px;
     }
 
     .title-area p{
@@ -156,7 +199,7 @@
     @media print{
       body{ background:#fff; padding:0; }
       .filters, .btns { display:none !important; }
-      .table-wrap { box-shadow:none; border-radius:0; }
+      .table-wrap, .topbar { box-shadow:none; border-radius:0; }
       thead th{ position:static; }
     }
   </style>
@@ -164,9 +207,22 @@
 
 <body>
 
+  <!-- TOP BAR WITH LOGO + CENTER TEXT -->
+  <div class="topbar">
+    <div class="brand-left">
+      <!-- ✅ LOGO (keep file in same folder) -->
+      <img class="itm-logo" src="itm logo.jpeg" alt="ITM Logo"
+           onerror="this.style.display='none';" />
+    </div>
+
+    <div class="center-title">CXO MEET</div>
+
+    <div class="right-space"></div>
+  </div>
+
   <div class="header">
     <div class="title-area">
-      <h1>CXO MEET - Alumni Dashboard</h1>
+      <h1>Alumni Dashboard</h1>
       <p id="countText">Showing 0 records</p>
 
       <div class="totalBox">
@@ -207,11 +263,9 @@
   </div>
 
 <script>
-  // ✅ IMPORTANT: Since index.html and photos are in SAME folder
-  // C:\Users\anupa\Desktop\linkdin\
+  // ✅ index.html + itm logo.jpeg + all photos are in SAME folder
   const BASE_PATH = "";
 
-  // ✅ Name -> Exact Photo file name (same folder)
   const photoMap = {
     "Akhil Mathur": "Akhil Mathur Anand Rathi.jpg",
     "Amitabh Dalal": "Amitabh Dalal Utl.jpg",
@@ -293,7 +347,6 @@
     "Aditya Mittal": "Aditya Mittal Image.jfif"
   };
 
-  // ✅ Data
   const alumniData = [
     { name:"Bharat Parekh", batch:"1991-1993", company:"CLSA", designation:"Executive Director" },
     { name:"Ashok Suvarna", batch:"1995-1998", company:"Aditya Birla Money", designation:"CEO" },
@@ -365,13 +418,11 @@
     { name:"Aditya Mittal", batch:"2002-2004", company:"Kellanova", designation:"Head - Commercial Experience" }
   ];
 
-  // attach photos by name
   alumniData.forEach(a => {
     const file = photoMap[a.name];
     a.photo = file ? (BASE_PATH + file) : "";
   });
 
-  // DOM
   const tableBody = document.getElementById("tableBody");
   const batchFilter = document.getElementById("batchFilter");
   const companyFilter = document.getElementById("companyFilter");
@@ -379,7 +430,6 @@
   const resetBtn = document.getElementById("resetBtn");
   const countText = document.getElementById("countText");
   const totalAlumni = document.getElementById("totalAlumni");
-
   const exportBtn = document.getElementById("exportBtn");
   const printBtn = document.getElementById("printBtn");
 
@@ -490,7 +540,6 @@
 
   printBtn.addEventListener("click", () => window.print());
 
-  // Init
   totalAlumni.textContent = alumniData.length;
   populateFilters();
   applyFilters();
