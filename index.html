@@ -74,7 +74,6 @@
       margin-top:8px;
     }
 
-    /* Total Alumni Box */
     .totalBox{
       display:inline-block;
       margin-top:10px;
@@ -99,7 +98,7 @@
       width:100%;
       border-collapse:collapse;
       min-width:1050px;
-      table-layout:fixed; /* ✅ Equal columns */
+      table-layout:fixed;
     }
 
     thead th{
@@ -126,14 +125,14 @@
 
     tbody tr:hover{ background:#fafafa; }
 
-    /* ✅ Photo column fixed */
+    /* Photo column fixed */
     th:first-child,
     td:first-child{
       width:70px;
       text-align:center;
     }
 
-    /* ✅ Remaining columns equal width */
+    /* Remaining columns equal width */
     thead th:not(:first-child),
     tbody td:not(:first-child){
       width:25%;
@@ -150,23 +149,12 @@
       background:#f0f0f0;
     }
 
-    /* Blank placeholder when no photo */
     .avatar.blank{
       background:linear-gradient(135deg,#eee,#ddd);
     }
 
     .highlight{
       background:#fff59d;
-    }
-
-    .badge{
-      display:inline-block;
-      padding:4px 10px;
-      border-radius:999px;
-      background:#eef2ff;
-      font-size:12px;
-      font-weight:700;
-      color:#2c3e50;
     }
 
     .footer{
@@ -213,12 +201,11 @@
     </div>
   </div>
 
-  <!-- Table -->
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th></th> <!-- ✅ No heading for photos -->
+          <th></th>
           <th>Name</th>
           <th>Batch</th>
           <th>Company</th>
@@ -234,10 +221,13 @@
   </div>
 
 <script>
-  // ✅ Full file path base
-  const BASE_PATH = "file:///C:/Users/anupa/Desktop/linkdin/";
+  /* ✅ IMPORTANT:
+     Put your index.html inside folder CXO_Dashboard
+     and put all photos inside CXO_Dashboard/photos/
+  */
+  const BASE_PATH = "photos/";
 
-  // ✅ Photo map (name -> exact file)
+  // ✅ Photo map (name -> exact file name in photos folder)
   const photoMap = {
     "Dhananjay Singh Kushwah": "Dhananjay Singh Kushwah FOMOSO.jpg",
     "Dinesh Pligoakar": "Dinesh Pilgaokar Image.jfif",
@@ -319,13 +309,13 @@
     "Bindu Menon": "Bindu Menon PointBlank Healthcare Communications.jpg"
   };
 
-  // ✅ Alumni Data (your updated list)
+  // ✅ Alumni Data
   const alumniData = [
-    { name:"Bharat Parekh", batch:"1991-1993", company:"CLSA", designation:"Executive Director", },
+    { name:"Bharat Parekh", batch:"1991-1993", company:"CLSA", designation:"Executive Director", highlight:true },
     { name:"Ashok Suvarna", batch:"1995-1998", company:"Aditya Birla Money", designation:"CEO" },
     { name:"Kartik Iyer", batch:"2005-2007", company:"Cohizon Life Sciences", designation:"CHRO" },
     { name:"Dinesh Pligoakar", batch:"1991-1993", company:"Barcode India", designation:"Executive VP and CCO" },
-    { name:"Rahul Chiddarwar", batch:"1996-1998", company:"Unimoni", designation:"CEO" },
+    { name:"Rahul Chiddarwar", batch:"1996-1998", company:"Unimoni", designation:"CEO", highlight:true },
     { name:"Sunjoy Dhawan", batch:"1991-1993", company:"DHL Express India", designation:"CHRO" },
     { name:"Prashant Nair", batch:"1996-1998", company:"Ambit Capital", designation:"Director" },
     { name:"Reet Bhambani", batch:"2001-2003", company:"EMA Partenrs", designation:"MD and COO" },
@@ -391,7 +381,7 @@
     { name:"Aditya Mittal", batch:"2002-2004", company:"Kellanova", designation:"Head - Commercial Experience" }
   ];
 
-  // add photos into alumniData using photoMap
+  // attach photos
   alumniData.forEach(a => {
     const file = photoMap[a.name];
     a.photo = file ? (BASE_PATH + file) : "";
@@ -438,7 +428,7 @@
       if (a.highlight) tr.classList.add("highlight");
 
       const photoHTML = a.photo
-        ? `<img class="avatar" src="${a.photo}" alt="${a.name}" />`
+        ? `<img class="avatar" src="${a.photo}" alt="${a.name}" onerror="this.style.display='none'">`
         : `<div class="avatar blank"></div>`;
 
       tr.innerHTML = `
