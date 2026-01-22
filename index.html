@@ -221,14 +221,36 @@
   </div>
 
 <script>
-  /* ✅ IMPORTANT:
-     Put your index.html inside folder CXO_Dashboard
-     and put all photos inside CXO_Dashboard/photos/
-  */
+  // ✅ Put your index.html in CXO_DASHBOARD folder
+  // ✅ Put all photos inside CXO_DASHBOARD/photos/
   const BASE_PATH = "photos/";
 
-  // ✅ Photo map (name -> exact file name in photos folder)
+  // ✅ Photo map (Name -> Exact file name in photos folder)
   const photoMap = {
+    "Sweta Kakati": "Sweta Kakati Starbucks.jpg",
+    "Tarandeep Singh Sekhon": "Tarandeep Singh Sekhon KidZania India.jpg",
+    "Triven Chopra": "Triven Chopra NATWEST.jpg",
+    "Uday Mathur": "Uday Mathur Image.jfif",
+    "Vijay Haswani": "Vijay Haswani Image.jfif",
+    "Vikram Lalvani": "Vikram Lalvani Sterling Holiday Resorts.jpg",
+    "Virendra Chaudhary": "Virendra Chaudhary Algor supply chain.jpg",
+    "Vishal Vyas": "Vishal Vyas Image.jfif",
+    "Yashraj Kesharwani": "Yashraj Kesharwani.jfif",
+    "Abhishek Singh": "Abhishek Singh Adani Group.jpg",
+    "Aditya Mittal": "Aditya Mittal Image.jfif",
+    "Akhil Mathur": "Akhil Mathur Anand Rathi.jpg",
+    "Amitabh Dalal": "Amitabh Dalal Utl.jpg",
+    "Ankesh Kumar": "Ankesh Kumar ingram micro.png",
+    "Ankur Pagariya": "Ankur Pagariya Indusind bank.jpg",
+    "Anoop Sharma": "Anoop Sharma KPMG.jpg",
+    "Anshuman Shrivastava": "Anshuman Shrivastava BC Jindal Group.jpg",
+    "Anuja Ghosh": "Anuja Ghosh Image.jfif",
+    "Apram Apar": "Apram Apar Ocean Network Express.jpg",
+    "Arun Bharath": "Arun Bharath.png",
+    "Ashok Suvarna": "Ashok Suvarna 1995-98 Aditya brila mony.jpg",
+    "Barun V Mohanty": "Barun V Mohanty Greenply Industries Limited.jpg",
+    "Bharat Parekh": "Bharat Parekh CLSA 1991-93.jpg",
+    "Bindu Menon": "Bindu Menon PointBlank Healthcare Communications.jpg",
     "Dhananjay Singh Kushwah": "Dhananjay Singh Kushwah FOMOSO.jpg",
     "Dinesh Pligoakar": "Dinesh Pilgaokar Image.jfif",
     "Dipesh Gajera": "Dipesh Gajera yes bank.jpg",
@@ -282,40 +304,16 @@
     "Sujeesh Sukumaran": "Sujeesh Sukumaran Pepper Wellness Private Ltd.jpg",
     "Sumit Jaiswal": "Sumit Jaiswal Grover Zampa Vineyards.jpg",
     "Sunjoy Dhawan": "Sunjoy Dhawan Image.jfif",
-    "Sushma Chopra": "Sushma Chopra Mondelez international.jpg",
-    "Sweta Kakati": "Sweta Kakati Starbucks.jpg",
-    "Tarandeep Singh Sekhon": "Tarandeep Singh Sekhon KidZania India.jpg",
-    "Triven Chopra": "Triven Chopra NATWEST.jpg",
-    "Uday Mathur": "Uday Mathur Image.jfif",
-    "Vijay Haswani": "Vijay Haswani Image.jfif",
-    "Vikram Lalvani": "Vikram Lalvani Sterling Holiday Resorts.jpg",
-    "Virendra Chaudhary": "Virendra Chaudhary Algor supply chain.jpg",
-    "Vishal Vyas": "Vishal Vyas Image.jfif",
-    "Yashraj Kesharwani": "Yashraj Kesharwani.jfif",
-    "Abhishek Singh": "Abhishek Singh Adani Group.jpg",
-    "Aditya Mittal": "Aditya Mittal Image.jfif",
-    "Akhil Mathur": "Akhil Mathur Anand Rathi.jpg",
-    "Amitabh Dalal": "Amitabh Dalal Utl.jpg",
-    "Ankesh Kumar": "Ankesh Kumar ingram micro.png",
-    "Ankur Pagariya": "Ankur Pagariya Indusind bank.jpg",
-    "Anoop Sharma": "Anoop Sharma KPMG.jpg",
-    "Anshuman Shrivastava": "Anshuman Shrivastava BC Jindal Group.jpg",
-    "Anuja Ghosh": "Anuja Ghosh Image.jfif",
-    "Apram Apar": "Apram Apar Ocean Network Express.jpg",
-    "Arun Bharath": "Arun Bharath.png",
-    "Ashok Suvarna": "Ashok Suvarna 1995-98 Aditya brila mony.jpg",
-    "Barun V Mohanty": "Barun V Mohanty Greenply Industries Limited.jpg",
-    "Bharat Parekh": "Bharat Parekh CLSA 1991-93.jpg",
-    "Bindu Menon": "Bindu Menon PointBlank Healthcare Communications.jpg"
+    "Sushma Chopra": "Sushma Chopra Mondelez international.jpg"
   };
 
   // ✅ Alumni Data
   const alumniData = [
-    { name:"Bharat Parekh", batch:"1991-1993", company:"CLSA", designation:"Executive Director", highlight:true },
+    { name:"Bharat Parekh", batch:"1991-1993", company:"CLSA", designation:"Executive Director" },
     { name:"Ashok Suvarna", batch:"1995-1998", company:"Aditya Birla Money", designation:"CEO" },
     { name:"Kartik Iyer", batch:"2005-2007", company:"Cohizon Life Sciences", designation:"CHRO" },
     { name:"Dinesh Pligoakar", batch:"1991-1993", company:"Barcode India", designation:"Executive VP and CCO" },
-    { name:"Rahul Chiddarwar", batch:"1996-1998", company:"Unimoni", designation:"CEO", highlight:true },
+    { name:"Rahul Chiddarwar", batch:"1996-1998", company:"Unimoni", designation:"CEO" },
     { name:"Sunjoy Dhawan", batch:"1991-1993", company:"DHL Express India", designation:"CHRO" },
     { name:"Prashant Nair", batch:"1996-1998", company:"Ambit Capital", designation:"Director" },
     { name:"Reet Bhambani", batch:"2001-2003", company:"EMA Partenrs", designation:"MD and COO" },
