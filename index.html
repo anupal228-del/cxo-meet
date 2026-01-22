@@ -10,7 +10,7 @@
     body{
       margin:0;
       background:#f4f6f9;
-      padding:18px;
+      padding:14px;
       color:#111;
     }
 
@@ -31,12 +31,13 @@
       display:flex;
       align-items:center;
       gap:10px;
-      min-width:220px;
+      width:70px;
+      flex:0 0 70px;
     }
 
     .itm-logo{
-      width:52px;
-      height:52px;
+      width:48px;
+      height:48px;
       object-fit:contain;
       border-radius:12px;
       border:1px solid #eee;
@@ -50,13 +51,15 @@
       font-size:26px;
       font-weight:900;
       letter-spacing:2px;
+      line-height:1;
     }
 
     .right-space{
-      min-width:220px;
+      width:70px;
+      flex:0 0 70px;
     }
 
-    /* FILTERS ROW */
+    /* INFO + FILTERS */
     .header{
       display:flex;
       justify-content:space-between;
@@ -70,7 +73,7 @@
       display:flex;
       flex-direction:column;
       gap:8px;
-      min-width:220px;
+      min-width:240px;
     }
 
     .countText{
@@ -89,6 +92,13 @@
       font-weight:700;
       color:#111;
       width:max-content;
+    }
+
+    .btns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:6px;
     }
 
     .filters{
@@ -126,14 +136,7 @@
       border:1px solid #ddd;
     }
 
-    .btns{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:6px;
-    }
-
-    /* TABLE */
+    /* TABLE (Desktop) */
     .table-wrap{
       margin-top:12px;
       background:#fff;
@@ -173,22 +176,20 @@
 
     tbody tr:hover{ background:#fafafa; }
 
-    /* Photo column fixed */
     th:first-child,
     td:first-child{
       width:70px;
       text-align:center;
     }
 
-    /* Remaining columns equal width */
     thead th:not(:first-child),
     tbody td:not(:first-child){
       width:25%;
     }
 
     .avatar{
-      width:40px;
-      height:40px;
+      width:42px;
+      height:42px;
       border-radius:50%;
       object-fit:cover;
       display:block;
@@ -196,9 +197,108 @@
       border:1px solid #ddd;
       background:#f0f0f0;
     }
-
     .avatar.blank{
       background:linear-gradient(135deg,#eee,#ddd);
+    }
+
+    /* MOBILE CARD VIEW */
+    .cards{
+      display:none;
+      gap:12px;
+    }
+
+    .card{
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 6px 16px rgba(0,0,0,0.06);
+      padding:12px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .card .photo{
+      width:56px;
+      flex:0 0 56px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+
+    .card .info{
+      flex:1;
+      min-width:0;
+    }
+
+    .card .name{
+      font-weight:800;
+      font-size:16px;
+      margin:0 0 6px;
+    }
+
+    .meta{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:6px;
+      font-size:13px;
+      color:#222;
+    }
+
+    .meta span{
+      display:block;
+      background:#f6f7fb;
+      border:1px solid #eee;
+      padding:8px 10px;
+      border-radius:12px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    .meta b{
+      color:#111;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width: 768px){
+      body{ padding:12px; }
+
+      .center-title{
+        font-size:22px;
+        letter-spacing:1px;
+      }
+
+      .header{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .left-info{
+        min-width:unset;
+      }
+
+      .filters{
+        justify-content:stretch;
+        width:100%;
+      }
+
+      select, input{
+        width:100%;
+        min-width:unset;
+      }
+
+      button{
+        width:100%;
+      }
+
+      .btns{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      /* Hide desktop table, show cards */
+      .table-wrap{ display:none; }
+      .cards{ display:grid; }
     }
 
     @media print{
@@ -212,26 +312,21 @@
 
 <body>
 
-  <!-- ✅ TOP BAR (ONLY LOGO + CXO MEET) -->
+  <!-- TOP BAR -->
   <div class="topbar">
     <div class="brand-left">
       <img class="itm-logo" src="itm logo.jpeg" alt="ITM Logo"
            onerror="this.style.display='none';" />
     </div>
-
     <div class="center-title">CXO MEET</div>
-
     <div class="right-space"></div>
   </div>
 
-  <!-- FILTERS + COUNTS -->
+  <!-- INFO + FILTERS -->
   <div class="header">
     <div class="left-info">
       <div class="countText" id="countText">Showing 0 records</div>
-
-      <div class="totalBox">
-        Total Alumni: <span id="totalAlumni">0</span>
-      </div>
+      <div class="totalBox">Total Alumni: <span id="totalAlumni">0</span></div>
 
       <div class="btns">
         <button class="btn-light" id="exportBtn">Export CSV</button>
@@ -251,7 +346,10 @@
     </div>
   </div>
 
-  <!-- TABLE -->
+  <!-- MOBILE CARDS -->
+  <div class="cards" id="cardsWrap"></div>
+
+  <!-- DESKTOP TABLE -->
   <div class="table-wrap">
     <table>
       <thead>
@@ -428,6 +526,7 @@
   });
 
   const tableBody = document.getElementById("tableBody");
+  const cardsWrap = document.getElementById("cardsWrap");
   const batchFilter = document.getElementById("batchFilter");
   const companyFilter = document.getElementById("companyFilter");
   const searchInput = document.getElementById("searchInput");
@@ -478,8 +577,33 @@
 
       tableBody.appendChild(tr);
     });
+  }
 
-    countText.textContent = `Showing ${data.length} records`;
+  function renderCards(data){
+    cardsWrap.innerHTML = "";
+
+    data.forEach(a => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const photoHTML = a.photo
+        ? `<img class="avatar" src="${a.photo}" alt="${a.name}" onerror="this.style.display='none'">`
+        : `<div class="avatar blank"></div>`;
+
+      card.innerHTML = `
+        <div class="photo">${photoHTML}</div>
+        <div class="info">
+          <p class="name">${a.name}</p>
+          <div class="meta">
+            <span><b>Batch:</b> ${a.batch ? a.batch : "-"}</span>
+            <span><b>Company:</b> ${a.company}</span>
+            <span><b>Designation:</b> ${a.designation}</span>
+          </div>
+        </div>
+      `;
+
+      cardsWrap.appendChild(card);
+    });
   }
 
   function applyFilters() {
@@ -494,7 +618,10 @@
       return matchBatch && matchCompany && matchSearch;
     });
 
+    countText.textContent = `Showing ${filtered.length} records`;
+
     renderTable(filtered);
+    renderCards(filtered);
   }
 
   function exportCSV(data){
