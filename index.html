@@ -47,16 +47,16 @@
     .center-title{
       flex:1;
       text-align:center;
-      font-size:22px;
+      font-size:26px;
       font-weight:900;
-      letter-spacing:1px;
+      letter-spacing:2px;
     }
 
     .right-space{
       min-width:220px;
     }
 
-    /* HEADER BELOW */
+    /* FILTERS ROW */
     .header{
       display:flex;
       justify-content:space-between;
@@ -66,15 +66,29 @@
       margin-bottom:14px;
     }
 
-    .title-area h1{
-      margin:0;
-      font-size:18px;
+    .left-info{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:220px;
     }
 
-    .title-area p{
-      margin:6px 0 0;
-      color:#444;
+    .countText{
+      font-size:14px;
+      color:#333;
+      font-weight:600;
+    }
+
+    .totalBox{
+      display:inline-block;
+      background:#fff;
+      border:1px solid #ddd;
+      border-radius:14px;
+      padding:8px 12px;
       font-size:13px;
+      font-weight:700;
+      color:#111;
+      width:max-content;
     }
 
     .filters{
@@ -82,6 +96,8 @@
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
+      justify-content:flex-end;
+      flex:1;
     }
 
     select, input{
@@ -114,21 +130,10 @@
       display:flex;
       gap:10px;
       flex-wrap:wrap;
-      margin-top:8px;
+      margin-top:6px;
     }
 
-    .totalBox{
-      display:inline-block;
-      margin-top:10px;
-      background:#fff;
-      border:1px solid #ddd;
-      border-radius:14px;
-      padding:8px 12px;
-      font-size:13px;
-      font-weight:700;
-      color:#111;
-    }
-
+    /* TABLE */
     .table-wrap{
       margin-top:12px;
       background:#fff;
@@ -207,10 +212,9 @@
 
 <body>
 
-  <!-- TOP BAR WITH LOGO + CENTER TEXT -->
+  <!-- ✅ TOP BAR (ONLY LOGO + CXO MEET) -->
   <div class="topbar">
     <div class="brand-left">
-      <!-- ✅ LOGO (keep file in same folder) -->
       <img class="itm-logo" src="itm logo.jpeg" alt="ITM Logo"
            onerror="this.style.display='none';" />
     </div>
@@ -220,10 +224,10 @@
     <div class="right-space"></div>
   </div>
 
+  <!-- FILTERS + COUNTS -->
   <div class="header">
-    <div class="title-area">
-      <h1>Alumni Dashboard</h1>
-      <p id="countText">Showing 0 records</p>
+    <div class="left-info">
+      <div class="countText" id="countText">Showing 0 records</div>
 
       <div class="totalBox">
         Total Alumni: <span id="totalAlumni">0</span>
@@ -247,6 +251,7 @@
     </div>
   </div>
 
+  <!-- TABLE -->
   <div class="table-wrap">
     <table>
       <thead>
@@ -263,7 +268,6 @@
   </div>
 
 <script>
-  // ✅ index.html + itm logo.jpeg + all photos are in SAME folder
   const BASE_PATH = "";
 
   const photoMap = {
