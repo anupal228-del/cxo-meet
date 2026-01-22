@@ -153,19 +153,9 @@
       background:linear-gradient(135deg,#eee,#ddd);
     }
 
-    .highlight{
-      background:#fff59d;
-    }
-
-    .footer{
-      margin-top:12px;
-      font-size:12px;
-      color:#666;
-    }
-
     @media print{
       body{ background:#fff; padding:0; }
-      .filters, .footer, .btns { display:none !important; }
+      .filters, .btns { display:none !important; }
       .table-wrap { box-shadow:none; border-radius:0; }
       thead th{ position:static; }
     }
@@ -216,28 +206,13 @@
     </table>
   </div>
 
-  <div class="footer">
-    CXO Meet Alumni Dashboard
-  </div>
-
 <script>
-  // ✅ Put your index.html in CXO_DASHBOARD folder
-  // ✅ Put all photos inside CXO_DASHBOARD/photos/
-  const BASE_PATH = "photos/";
+  // ✅ IMPORTANT: Since index.html and photos are in SAME folder
+  // C:\Users\anupa\Desktop\linkdin\
+  const BASE_PATH = "";
 
-  // ✅ Photo map (Name -> Exact file name in photos folder)
+  // ✅ Name -> Exact Photo file name (same folder)
   const photoMap = {
-    "Sweta Kakati": "Sweta Kakati Starbucks.jpg",
-    "Tarandeep Singh Sekhon": "Tarandeep Singh Sekhon KidZania India.jpg",
-    "Triven Chopra": "Triven Chopra NATWEST.jpg",
-    "Uday Mathur": "Uday Mathur Image.jfif",
-    "Vijay Haswani": "Vijay Haswani Image.jfif",
-    "Vikram Lalvani": "Vikram Lalvani Sterling Holiday Resorts.jpg",
-    "Virendra Chaudhary": "Virendra Chaudhary Algor supply chain.jpg",
-    "Vishal Vyas": "Vishal Vyas Image.jfif",
-    "Yashraj Kesharwani": "Yashraj Kesharwani.jfif",
-    "Abhishek Singh": "Abhishek Singh Adani Group.jpg",
-    "Aditya Mittal": "Aditya Mittal Image.jfif",
     "Akhil Mathur": "Akhil Mathur Anand Rathi.jpg",
     "Amitabh Dalal": "Amitabh Dalal Utl.jpg",
     "Ankesh Kumar": "Ankesh Kumar ingram micro.png",
@@ -304,10 +279,21 @@
     "Sujeesh Sukumaran": "Sujeesh Sukumaran Pepper Wellness Private Ltd.jpg",
     "Sumit Jaiswal": "Sumit Jaiswal Grover Zampa Vineyards.jpg",
     "Sunjoy Dhawan": "Sunjoy Dhawan Image.jfif",
-    "Sushma Chopra": "Sushma Chopra Mondelez international.jpg"
+    "Sushma Chopra": "Sushma Chopra Mondelez international.jpg",
+    "Sweta Kakati": "Sweta Kakati Starbucks.jpg",
+    "Tarandeep Singh Sekhon": "Tarandeep Singh Sekhon KidZania India.jpg",
+    "Triven Chopra": "Triven Chopra NATWEST.jpg",
+    "Uday Mathur": "Uday Mathur Image.jfif",
+    "Vijay Haswani": "Vijay Haswani Image.jfif",
+    "Vikram Lalvani": "Vikram Lalvani Sterling Holiday Resorts.jpg",
+    "Virendra Chaudhary": "Virendra Chaudhary Algor supply chain.jpg",
+    "Vishal Vyas": "Vishal Vyas Image.jfif",
+    "Yashraj Kesharwani": "Yashraj Kesharwani.jfif",
+    "Abhishek Singh": "Abhishek Singh Adani Group.jpg",
+    "Aditya Mittal": "Aditya Mittal Image.jfif"
   };
 
-  // ✅ Alumni Data
+  // ✅ Data
   const alumniData = [
     { name:"Bharat Parekh", batch:"1991-1993", company:"CLSA", designation:"Executive Director" },
     { name:"Ashok Suvarna", batch:"1995-1998", company:"Aditya Birla Money", designation:"CEO" },
@@ -379,7 +365,7 @@
     { name:"Aditya Mittal", batch:"2002-2004", company:"Kellanova", designation:"Head - Commercial Experience" }
   ];
 
-  // attach photos
+  // attach photos by name
   alumniData.forEach(a => {
     const file = photoMap[a.name];
     a.photo = file ? (BASE_PATH + file) : "";
@@ -423,7 +409,6 @@
 
     data.forEach(a => {
       const tr = document.createElement("tr");
-      if (a.highlight) tr.classList.add("highlight");
 
       const photoHTML = a.photo
         ? `<img class="avatar" src="${a.photo}" alt="${a.name}" onerror="this.style.display='none'">`
