@@ -94,7 +94,7 @@
       align-items:center;
       justify-content:flex-end;
       width:100%;
-      max-width:780px;
+      max-width:820px;
     }
 
     select, input{
@@ -121,7 +121,7 @@
 
     button:hover{ opacity:0.9; }
 
-    .btn-light{
+    button.btn-light{
       background:#fff;
       color:#111;
       border:1px solid #ddd;
@@ -145,7 +145,7 @@
     table{
       width:100%;
       border-collapse:collapse;
-      min-width:980px;
+      min-width:1050px;
       table-layout:fixed;
     }
 
@@ -230,6 +230,13 @@
         align-items:stretch;
       }
     }
+
+    @media print{
+      body{ background:#fff; padding:0; }
+      .filters, .btns { display:none !important; }
+      .table-wrap { box-shadow:none; border-radius:0; }
+      thead th{ position:static; }
+    }
   </style>
 </head>
 
@@ -281,7 +288,7 @@
   </div>
 
 <script>
-  // ✅ FULL CONFIRM LIST (65)
+  // ✅ FINAL LIST ONLY (1 to 66)
   const alumniData = [
     { name:"Ashok Suvarna", batch:"1995-1998", company:"Aditya Birla Money", designation:"CEO", photo:"Ashok Suvarna 1995-98 Aditya brila mony.jpg" },
     { name:"Kartik Iyer", batch:"2005-2007", company:"Cohizon Life Sciences", designation:"CHRO", photo:"" },
@@ -329,10 +336,6 @@
     { name:"Minal Jain", batch:"2008-2010", company:"Leadership Tilit", designation:"Co-founder & Director", photo:"Minal Jain Leadership Tilit.png" },
     { name:"Uday Mathur", batch:"1994-1996", company:"Independent", designation:"Director", photo:"Uday Mathur Image.jfif" },
     { name:"Roshan Damodaran", batch:"", company:"Medusind", designation:"HR Head", photo:"Roshan Damodaran Image.jfif" },
-
-    /* ✅ MISSED 1: Esha Krishnan */
-    { name:"Esha Krishnan", batch:"", company:"Mercedez Benz Research & Development India", designation:"HR Head", photo:"Esha Krishnan Image.jfif" },
-
     { name:"Utpal Das", batch:"2006-2008", company:"EMA Partners", designation:"Clinet Partner", photo:"" },
     { name:"Barun V Mohanty", batch:"2007-2009", company:"Greenply Industries Limited", designation:"General Manager", photo:"Barun V Mohanty Greenply Industries Limited.jpg" },
     { name:"Shalini Singh", batch:"", company:"Hitachi Digital Services", designation:"HR Head", photo:"Shalini Singh Hitachi Digital Services.jpg" },
@@ -348,13 +351,11 @@
     { name:"Manohar Takhtani", batch:"2009-2011", company:"Reserve Bank of India", designation:"Grade B officer", photo:"" },
     { name:"Amit Grover", batch:"2004-2006", company:"HDFC Mutual Fund", designation:"Associate VP", photo:"" },
     { name:"Anoop Sharma", batch:"2005-2007", company:"KPMG", designation:"Director", photo:"Anoop Sharma KPMG.jpg" },
-    { name:"Hemen Modi", batch:"", company:"Reliance Industries", designation:"Head- Investor Relations", photo:"" },
-
-    /* ✅ MISSED 2: Dhananjay */
+    { name:"Hemen Modi", batch:"1992-1994", company:"Reliance Industries", designation:"Head- Investor Relations", photo:"" },
     { name:"Dhananjay Singh Kushwah", batch:"2012-2014", company:"FOMOSO", designation:"Founder", photo:"Dhananjay Singh Kushwah FOMOSO.jpg" },
-
-    /* ✅ MISSED 3: Amit Raj */
-    { name:"Amit Raj", batch:"2004-2006", company:"Abchlor Investment Pvt Ltd", designation:"Vice President", photo:"" }
+    { name:"Amit Raj", batch:"2004-2006", company:"Abchlor Investment Pvt Ltd", designation:"Vice President", photo:"" },
+    { name:"Indranil Suryawanshi", batch:"2005", company:"Norhen Arc Investments", designation:"Investments", photo:"" },
+    { name:"Virat Sharma", batch:"2008-2010", company:"Zepto", designation:"Senior Vice President", photo:"" }
   ];
 
   const tableBody = document.getElementById("tableBody");
