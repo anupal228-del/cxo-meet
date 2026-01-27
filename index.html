@@ -6,48 +6,36 @@
 <title>CXO MEET</title>
 
 <style>
-*{box-sizing:border-box;font-family:Arial,sans-serif}
-body{margin:0;background:#f4f6f9;padding:14px}
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{margin:0;padding:14px;background:#f4f6f9}
 
 /* HEADER */
-.topbar{
+.header{
   background:#fff;
   border-radius:18px;
-  padding:16px 20px;
-  box-shadow:0 10px 22px rgba(0,0,0,.08);
-  margin-bottom:14px;
-  display:grid;
-  grid-template-columns:auto 1fr;
+  min-height:120px;
+  display:flex;
   align-items:center;
-  gap:16px;
+  justify-content:center;
+  box-shadow:0 10px 22px rgba(0,0,0,.08);
+  margin-bottom:16px;
+  position:relative;
 }
-.topbar img{height:70px}
-.topbar-title{
-  text-align:center;
+.header::before{
+  content:"";
+  position:absolute;
+  left:24px;
+  top:50%;
+  transform:translateY(-50%);
+  width:220px;
+  height:70px;
+  background:url("itm logo.jpeg") no-repeat center;
+  background-size:contain;
+}
+.header h1{
   font-size:34px;
   font-weight:900;
   letter-spacing:2px;
-}
-@media(max-width:650px){
-  .topbar{grid-template-columns:1fr;text-align:center}
-  .topbar img{margin:0 auto;height:80px}
-  .topbar-title{font-size:26px}
-}
-
-/* BUTTONS */
-.btns{
-  display:flex;
-  gap:10px;
-  margin-bottom:10px;
-  flex-wrap:wrap;
-}
-button{
-  padding:10px 14px;
-  border-radius:14px;
-  border:1px solid #ddd;
-  background:#fff;
-  font-weight:700;
-  cursor:pointer;
 }
 
 /* FILTERS */
@@ -56,13 +44,21 @@ button{
   gap:10px;
   flex-wrap:wrap;
   justify-content:flex-end;
-  margin-bottom:12px;
+  margin-bottom:14px;
 }
-select,input{
-  padding:10px 12px;
+.filters input,.filters select{
+  padding:10px 14px;
   border:1px solid #ddd;
   border-radius:14px;
-  min-width:160px;
+}
+.filters button{
+  padding:10px 18px;
+  border:none;
+  border-radius:14px;
+  background:#111;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
 }
 
 /* TABLE */
@@ -75,165 +71,175 @@ select,input{
 table{
   width:100%;
   border-collapse:collapse;
-  min-width:950px;
+  min-width:900px;
 }
 thead th{
   background:#f0f0f0;
-  padding:12px;
+  padding:14px;
   font-weight:800;
   text-align:center;
+  position:sticky;
+  top:0;
 }
 tbody td{
-  padding:12px;
+  padding:14px;
   border-bottom:1px solid #eee;
   text-align:center;
-  white-space:nowrap;
 }
-td.name-col{text-align:left;font-weight:800}
+tbody tr:hover{background:#fafafa}
 
 /* PHOTO */
 .avatar{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  object-fit:cover;
-  border:1px solid #ddd;
-  background:#e5e5e5;
+  width:48px;height:48px;border-radius:50%;
+  object-fit:cover;border:1px solid #ddd;
+  background:#e5e5e5;margin:auto;display:block;
 }
-
-/* BADGE */
+.name-col{text-align:left;font-weight:800}
 .badge{
-  padding:6px 12px;
+  display:inline-block;
+  min-width:180px;
+  padding:8px 16px;
   border-radius:999px;
   background:#eef2ff;
+  font-size:13px;
   font-weight:800;
-  font-size:12px;
 }
 
-@media print{
-  .filters,.btns{display:none}
+/* MOBILE */
+@media(max-width:650px){
+  .header h1{font-size:26px}
+  .header::before{width:150px}
+  table{min-width:760px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="topbar">
-  <img src="itm logo.jpeg" alt="ITM Logo">
-  <div class="topbar-title">CXO MEET</div>
-</div>
+<div class="header"><h1>CXO MEET</h1></div>
 
-<!-- BUTTONS -->
-<div class="btns">
-  <button id="exportBtn">Export CSV</button>
-  <button onclick="window.print()">Print</button>
-</div>
-
-<!-- FILTERS -->
 <div class="filters">
-  <input id="searchInput" placeholder="Search Name...">
-  <select id="batchFilter"><option value="all">All Batches</option></select>
-  <select id="companyFilter"><option value="all">All Companies</option></select>
-  <button id="resetBtn">Reset</button>
+  <input id="search" placeholder="Search Name">
+  <select id="batch"><option value="all">All Batches</option></select>
+  <select id="company"><option value="all">All Companies</option></select>
+  <button onclick="resetAll()">Reset</button>
 </div>
 
-<!-- TABLE -->
 <div class="table-wrap">
 <table>
 <thead>
 <tr>
-  <th>Photo</th>
-  <th>Name</th>
-  <th>Batch</th>
-  <th>Company</th>
-  <th>Designation</th>
+<th>Photo</th><th>Name</th><th>Batch</th><th>Company</th><th>Designation</th>
 </tr>
 </thead>
-<tbody id="tableBody"></tbody>
+<tbody id="tbody"></tbody>
 </table>
 </div>
 
 <script>
-/* ===== FINAL DATA (66) ===== */
-const alumniData = [
- {name:"Ashok Suvarna",batch:"1995-1998",company:"Aditya Birla Money",designation:"CEO",photo:"Ashok Suvarna 1995-98 Aditya brila mony.jpg"},
- {name:"Berlin Varghese",batch:"2004-2006",company:"HSBC",designation:"Head of Entity",photo:""},
- {name:"Dhananjay Singh Kushwah",batch:"2012-2014",company:"FOMOSO",designation:"Founder",photo:"Dhananjay Singh Kushwah FOMOSO.jpg"},
- {name:"Dinesh Pilgaokar",batch:"1991-1993",company:"Barcode India",designation:"Executive VP and CCO",photo:"Dinesh Pilgaokar Image.jfif"},
- {name:"Dipu Rajan",batch:"2004-2006",company:"HDFC",designation:"Senior VP",photo:"Dipu Rajan Image.jpg"},
- {name:"Hardik Sheth",batch:"2004-2006",company:"Tech Mahindra",designation:"Tech Head",photo:"Hardik Seth Image.jpeg"},
- {name:"Kartik Iyer",batch:"2005-2007",company:"Cohizon Life Sciences",designation:"CHRO",photo:""},
- {name:"Manav Verma",batch:"2000-2002",company:"IIFL",designation:"CMO",photo:"Manav Verma IIFL.jpg"},
- {name:"Prachi Sahay",batch:"2008-2010",company:"Disney -Hotsar",designation:"Head of Products",photo:"Prachi Sahay Image.jfif"},
- {name:"Rahul Chiddarwar",batch:"1996-1998",company:"Unimoni",designation:"CEO",photo:"Rahul Chiddarwar Unimoni.jpg"},
- {name:"Sunjoy Dhawan",batch:"1991-1993",company:"DHL Express India",designation:"CHRO",photo:"Sunjoy Dhawan Image.jfif"},
- {name:"Triven Chopra",batch:"2004-2006",company:"NatWest",designation:"Director",photo:"Triven Chopra NATWEST.jpg"}
+const alumni=[
+{name:"Abhishek Jadav",batch:"2010-2012",company:"Coldman Logistics",designation:"President Operations",photo:""},
+{name:"Aditya Mittal",batch:"2002-2004",company:"Kellanova",designation:"Head - Commercial Experience",photo:""},
+{name:"Amit Grover",batch:"2004-2006",company:"HDFC Mutual Fund",designation:"Associate VP",photo:""},
+{name:"Amitabh Dalal",batch:"2004-2006",company:"UTI",designation:"Vice President",photo:"Amitabh Dalal Utl.jpg"},
+{name:"Ankesh Kumar",batch:"2002-2004",company:"Ingram Micro",designation:"Director",photo:"Ankesh Kumar ingram micro.png"},
+{name:"Ankita Kapoor Chopra",batch:"2004-2006",company:"Anand Rathi",designation:"Associate Director",photo:""},
+{name:"Ankur Pagariya",batch:"2009-2011",company:"IndusInd Bank",designation:"Vice President",photo:"Ankur Pagariya Indusind bank.jpg"},
+{name:"Anoop Sharma",batch:"2005-2007",company:"KPMG",designation:"Director",photo:"Anoop Sharma KPMG.jpg"},
+{name:"Anuja Ghosh",batch:"2005-2007",company:"SBICAP Ventures",designation:"Head - HR",photo:"Anuja Ghosh Image.jfif"},
+{name:"Apram Apar",batch:"2002-2004",company:"Ocean Network Express",designation:"General Manager",photo:"Apram Apar Ocean Network Express.jpg"},
+{name:"Arun Bharath",batch:"2007-2009",company:"P & C Insurance Vertical",designation:"Director",photo:"Arun Bharath.png"},
+{name:"Ashok Suvarna",batch:"1995-1998",company:"Aditya Birla Money",designation:"CEO",photo:"Ashok Suvarna 1995-98 Aditya brila mony.jpg"},
+{name:"Barun V Mohanty",batch:"2007-2009",company:"Greenply Industries Limited",designation:"General Manager",photo:"Barun V Mohanty Greenply Industries Limited.jpg"},
+{name:"Berlin Varghese",batch:"2004-2006",company:"HSBC",designation:"Head of Entity",photo:""},
+{name:"Dhananjay Singh Kushwah",batch:"2012-2014",company:"FOMOSO",designation:"Founder",photo:"Dhananjay Singh Kushwah FOMOSO.jpg"},
+{name:"Dinesh Pilgaokar",batch:"1991-1993",company:"Barcode India",designation:"Executive VP and CCO",photo:"Dinesh Pilgaokar Image.jfif"},
+{name:"Dipu Rajan",batch:"2004-2006",company:"HDFC",designation:"Senior VP",photo:"Dipu Rajan Image.jpg"},
+{name:"Gunjan Malviya",batch:"2007-2009",company:"Experian",designation:"HR Director",photo:"Gunjan Malviya Experian.jpg"},
+{name:"Hardik Sheth",batch:"2004-2006",company:"Tech Mahindra",designation:"Tech Head",photo:"Hardik Seth Image.jpeg"},
+{name:"Hemen Modi",batch:"1992-1994",company:"Reliance Industries",designation:"Head - Investor Relations",photo:""},
+{name:"Ipsita Ansumala",batch:"2003-2005",company:"SAP",designation:"Partner Business Manager",photo:"Ipsita Ansumala SAP.jpg"},
+{name:"Jignesh Dawda",batch:"2005-2007",company:"Syntrannia LLP",designation:"Co-Founder & CEO",photo:"Jignesh Dawda Image.jfif"},
+{name:"Kartik Iyer",batch:"2005-2007",company:"Cohizon Life Sciences",designation:"CHRO",photo:""},
+{name:"Latika S Kundu",batch:"1994-1996",company:"Metropolitan Stock Exchange",designation:"MD & CEO",photo:"Latika S Kundu Metropolitan Stock Exchange.jpg"},
+{name:"Liza Singh",batch:"2010-2012",company:"Kotak Mahindra",designation:"SVP",photo:"Liza Singh Image.jfif"},
+{name:"Manav Verma",batch:"2000-2002",company:"IIFL",designation:"CMO",photo:"Manav Verma IIFL.jpg"},
+{name:"Meetiksha Takhtani",batch:"2009-2011",company:"Yes Bank",designation:"Senior Vice President",photo:"Meetiksha Takhtani yes bank.jpg"},
+{name:"Mihir Ashar",batch:"1993-1995",company:"Govindji Haridas",designation:"Founder",photo:"Mihir Ashar Govindji Haridas.jpg"},
+{name:"Minal Jain",batch:"2008-2010",company:"Leadership Tilit",designation:"Co-founder & Director",photo:"Minal Jain Leadership Tilit.png"},
+{name:"Naman Rastogi",batch:"2008-2010",company:"Jio Hotstar",designation:"Senior Director",photo:""},
+{name:"Neha Srivastava",batch:"2005-2007",company:"LeadSquared",designation:"Head - People & Culture",photo:""},
+{name:"Nidhi Verma",batch:"2003-2005",company:"Emkay",designation:"Head - Marketing",photo:"Nidhi Verma Emkay.jpg"},
+{name:"Niranjan Prasad Bhagwat",batch:"2003-2005",company:"First Advantage",designation:"Associate VP",photo:""},
+{name:"Prachi Sahay",batch:"2008-2010",company:"Disney Hotstar",designation:"Head of Products",photo:"Prachi Sahay Image.jfif"},
+{name:"Prajwal Rajan",batch:"2005-2007",company:"Hafele",designation:"GM",photo:"Prajwal Rajan Image.jfif"},
+{name:"Prashant Nair",batch:"1996-1998",company:"Ambit Capital",designation:"Director",photo:"Prashant Nair Ambit Capital.jpg"},
+{name:"Rahul Chiddarwar",batch:"1996-1998",company:"Unimoni",designation:"CEO",photo:"Rahul Chiddarwar Unimoni.jpg"},
+{name:"Rahul Prasad",batch:"2004-2006",company:"USV Pvt Ltd",designation:"Vice President",photo:"Rahul Prasad Image.jfif"},
+{name:"Rahul Rathi",batch:"2007-2009",company:"FundsIndia Private Wealth",designation:"Market Director",photo:""},
+{name:"Raghuveer Singh",batch:"2007-2009",company:"Zee5",designation:"Vice President Social Media",photo:"Raghuveer Singh Zee5.jpg"},
+{name:"Reet Bhambani",batch:"2004-2006",company:"EMA Partners",designation:"Managing Partner & COO",photo:"Reet Bhambani EMA partenrs.jpg"},
+{name:"Richpal Singh",batch:"2006-2008",company:"HDFC Bank",designation:"Senior VP",photo:""},
+{name:"Roshan Damodaran",batch:"",company:"Medusind",designation:"HR Head",photo:""},
+{name:"Santosh Raval",batch:"2012-2014",company:"Axis Bank",designation:"Vice President",photo:"Santosh Raval Axis Bank.jpg"},
+{name:"Shalini Singh",batch:"",company:"Hitachi Digital Services",designation:"HR Head",photo:"Shalini Singh Hitachi Digital Services.jpg"},
+{name:"Shantanu Pattnaik",batch:"",company:"Hindalco Industries Ltd",designation:"Senior GM",photo:""},
+{name:"Shekhar Asnani",batch:"2010-2012",company:"Jefferies",designation:"Director",photo:"Shekhar Asnani Image.jfif"},
+{name:"Shweta Laddha",batch:"2007-2009",company:"Multiple Asset Management",designation:"Head - Compliance",photo:"Shweta Laddha Image.jfif"},
+{name:"Siva Rama Kirshna",batch:"2011-2013",company:"LA Technologies",designation:"Director - Sales",photo:"Siva Rama Krishna Image.jfif"},
+{name:"Sunjoy Dhawan",batch:"1991-1993",company:"DHL Express India",designation:"CHRO",photo:"Sunjoy Dhawan Image.jfif"},
+{name:"Sujeesh Sukumaran",batch:"1993-1995",company:"Pepper Wellness Pvt Ltd",designation:"Founder",photo:"Sujeesh Sukumaran Pepper Wellness Private Ltd.jpg"},
+{name:"Sushma Chopra",batch:"1998-2000",company:"Mondelez International",designation:"Global Lead",photo:""},
+{name:"Triven Chopra",batch:"2004-2006",company:"NatWest",designation:"Director",photo:"Triven Chopra NATWEST.jpg"},
+{name:"Uday Mathur",batch:"1994-1996",company:"Independent",designation:"Director",photo:"Uday Mathur Image.jfif"},
+{name:"Utpal Das",batch:"2006-2008",company:"EMA Partners",designation:"Client Partner",photo:""},
+{name:"Vijay Haswani",batch:"2002-2004",company:"Navadhan",designation:"Co-Founder",photo:"Vijay Haswani Image.jfif"},
+{name:"Vikram Lalvani",batch:"1995-1997",company:"Sterling Holiday Resorts",designation:"MD & CEO",photo:"Vikram Lalvani Sterling Holiday Resorts.jpg"},
+{name:"Virat Sharma",batch:"2008-2010",company:"Zepto",designation:"Senior Vice President",photo:""},
+{name:"Virendra Chaudhary",batch:"2010-2012",company:"Algor Supply Chain",designation:"Founder",photo:"Virendra Chaudhary Algor supply chain.jpg"},
+{name:"Vishal Vyas",batch:"2009-2011",company:"DP World",designation:"Director - CPG & Retail",photo:"Vishal Vyas Image.jfif"},
+{name:"Yashraj Kesharwani",batch:"2012-2014",company:"Times of India",designation:"South India Business Head",photo:""}
 ];
 
-/* SORT A–Z */
-alumniData.sort((a,b)=>a.name.localeCompare(b.name));
+/* SORT */
+alumni.sort((a,b)=>a.name.localeCompare(b.name));
 
-const tbody=document.getElementById("tableBody");
-const search=document.getElementById("searchInput");
-const batch=document.getElementById("batchFilter");
-const company=document.getElementById("companyFilter");
-const reset=document.getElementById("resetBtn");
-const exportBtn=document.getElementById("exportBtn");
+const tbody=document.getElementById("tbody");
+const batchSel=document.getElementById("batch");
+const compSel=document.getElementById("company");
+const search=document.getElementById("search");
 
-function unique(arr){return [...new Set(arr)]}
+/* FILTER OPTIONS */
+[...new Set(alumni.map(a=>a.batch).filter(Boolean))].forEach(b=>batchSel.innerHTML+=`<option>${b}</option>`);
+[...new Set(alumni.map(a=>a.company))].forEach(c=>compSel.innerHTML+=`<option>${c}</option>`);
 
-function fillFilters(){
- unique(alumniData.map(a=>a.batch).filter(Boolean))
-   .forEach(b=>batch.innerHTML+=`<option>${b}</option>`);
- unique(alumniData.map(a=>a.company))
-   .forEach(c=>company.innerHTML+=`<option>${c}</option>`);
-}
-
+/* RENDER */
 function render(data){
- tbody.innerHTML="";
- data.forEach(a=>{
-  const img=a.photo
-   ? `<img class="avatar" src="${a.photo}" onerror="this.outerHTML='<div class=avatar></div>'">`
-   : `<div class="avatar"></div>`;
-  tbody.innerHTML+=`
-   <tr>
-    <td>${img}</td>
-    <td class="name-col">${a.name}</td>
-    <td>${a.batch||"-"}</td>
-    <td>${a.company}</td>
-    <td><span class="badge">${a.designation}</span></td>
-   </tr>`;
- });
+tbody.innerHTML="";
+data.forEach(a=>{
+tbody.innerHTML+=`
+<tr>
+<td>${a.photo?`<img src="${a.photo}" class="avatar" onerror="this.outerHTML='<div class=avatar></div>'">`:`<div class="avatar"></div>`}</td>
+<td class="name-col">${a.name}</td>
+<td>${a.batch||"-"}</td>
+<td>${a.company}</td>
+<td><span class="badge">${a.designation}</span></td>
+</tr>`});
 }
-
 function apply(){
- const s=search.value.toLowerCase();
- render(alumniData.filter(a=>
-  (batch.value=="all"||a.batch==batch.value) &&
-  (company.value=="all"||a.company==company.value) &&
-  a.name.toLowerCase().includes(s)
- ));
+const s=search.value.toLowerCase();
+render(alumni.filter(a=>
+(batchSel.value=="all"||a.batch==batchSel.value)&&
+(compSel.value=="all"||a.company==compSel.value)&&
+a.name.toLowerCase().includes(s)
+));
 }
+function resetAll(){
+search.value="";batchSel.value="all";compSel.value="all";render(alumni);
+}
+search.oninput=apply;batchSel.onchange=apply;compSel.onchange=apply;
 
-exportBtn.onclick=()=>{
- const rows=[["Name","Batch","Company","Designation"],
- ...alumniData.map(a=>[a.name,a.batch,a.company,a.designation])];
- const csv=rows.map(r=>r.join(",")).join("\n");
- const blob=new Blob([csv]);
- const a=document.createElement("a");
- a.href=URL.createObjectURL(blob);
- a.download="cxo_meet.csv";
- a.click();
-};
-
-search.oninput=apply;
-batch.onchange=apply;
-company.onchange=apply;
-reset.onclick=()=>{search.value="";batch.value="all";company.value="all";apply()}
-
-fillFilters();
-apply();
+render(alumni);
 </script>
 
 </body>
